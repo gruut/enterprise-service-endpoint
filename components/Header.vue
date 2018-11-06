@@ -25,7 +25,7 @@
 <style scoped>
   .explorer_header {
     justify-content: center;
-    background-image: linear-gradient(90deg, rgb(65,150,114) 0%, rgb(65,120,90) 100%);
+    background-image: linear-gradient(90deg, rgb(65,150,114) 0%, rgb(65,80,90) 100%);
     box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px 0;
   }
 
