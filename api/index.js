@@ -4,10 +4,10 @@ const express = require('express')
 const app = express()
 
 // Require API routes
-const users = require('./routes/users')
+const blocks = require('./routes/blocks')
 
 // Import API Routes
-app.use(users)
+app.use(blocks)
 
 // Export the server middleware
 module.exports = {
