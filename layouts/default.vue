@@ -1,16 +1,22 @@
 <template>
   <div>
     <nuxt/>
+    <my-header/>
+    <my-body/>
     <my-footer/>
   </div>
 </template>
 
 <script>
+  import Header from '~/components/Header.vue'
+  import Body from '~/components/Body.vue'
   import Footer from '~/components/Footer.vue'
 
   export default {
     components: {
-      Footer
+      'my-header': Header,
+      'my-body': Body,
+      'my-footer': Footer
     }
   }
 </script>
