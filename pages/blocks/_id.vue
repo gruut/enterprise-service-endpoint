@@ -28,7 +28,7 @@ export default {
   },
   head () {
     return {
-      title: `Block: ${this.block.id}`
+      title: `Block ${this.block.id}`
     }
   }
 }

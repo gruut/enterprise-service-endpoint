@@ -1,22 +1,20 @@
 <template>
-  <block-list :blocks="blocks.slice(0,5)" :show_more="true"></block-list>
+  <block-list :blocks="blocks" :show_more="false"></block-list>
 </template>
 
 <script>
-  import axios from '~/plugins/axios'
   import BlockList from '~/components/BlockList.vue'
+  import axios from '~/plugins/axios'
   const moment = require('moment')
 
   export default {
-    head () {
-      return {
-        title: 'Blockchain Explorer'
-      }
+    name: '_blocks.vue',
+    components: {
+      'block-list': BlockList
     },
-
     data () {
       return {
-        blocks: []
+        'blocks': ''
       }
     },
 
@@ -26,10 +24,6 @@
         block.time = moment(block.time).format('MMMM Do YYYY, h:mm:ss a')
       })
       return {blocks: data}
-    },
-
-    components: {
-      'block-list': BlockList
     }
   }
 </script>
