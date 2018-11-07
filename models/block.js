@@ -11,5 +11,6 @@ module.exports = (sequelize, DataTypes) => {
   block.associate = function (models) {
     // associations can be defined here
   }
+
   return block
 }

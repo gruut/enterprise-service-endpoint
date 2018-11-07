@@ -1,27 +1,114 @@
 <template>
-  <header>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
-  </header>
+  <section class="explorer_body">
+    <div class="explorer_body__table">
+      <div class="explorer_body__table_row">
+        <div class="explorer_body__table_cell">Block ID</div>
+        <div class="explorer_body__table_cell">Block Version</div>
+        <div class="explorer_body__table_cell">Block 생성시간</div>
+        <div class="explorer_body__table_cell">크기(KB)</div>
+      </div>
+      <div v-for="(block, index) in blocks.slice(0,5)" :key="index" class="explorer_body__table_row">
+        <nuxt-link :to="{ name: 'id', params: { id: block.id }}" class="explorer_body__table_cell explorer_body__table_cell--link">
+          {{ block.id }}
+        </nuxt-link>
+        <div class="explorer_body__table_cell">{{ block.version }}</div>
+        <div class="explorer_body__table_cell explorer_body__table_cell--time">{{ block.time }}</div>
+        <div class="explorer_body__table_cell">{{ block.size }}</div>
+      </div>
+    </div>
+    <a class="explorer_body__blocks_index">
+      <button type="button" class="explorer_body__blocks_button">더보기</button>
+    </a>
+  </section>
 </template>
 
 <script>
-import axios from '~/plugins/axios'
+  import axios from '~/plugins/axios'
+  const moment = require('moment')
 
-export default {
-  async asyncData () {
-    let { data } = await axios.get('/api/users')
-    return { users: data }
-  },
-  head () {
-    return {
-      title: 'Users'
+  export default {
+    head () {
+      return {
+        title: 'Blockchain Explorer'
+      }
+    },
+
+    async asyncData () {
+      let {data} = await axios.get('/api/blocks')
+      data.forEach(block => {
+        block.time = moment(block.time).format('MMMM Do YYYY, h:mm:ss a')
+      })
+      return {blocks: data}
     }
   }
-}
 </script>
 
 <style scoped>
+  .explorer_body {
+    background-color: #efefef;
+    min-height: 500px;
+    padding-bottom: 2rem;
+  }
 
+  .explorer_body__table {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 2rem;
+    font-family: "Ubuntu", sans-serif;
+    font-size: 1.5rem;
+  }
+
+  .explorer_body__table_row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 80%;
+    background-color: white;
+    padding: 1rem 2rem;
+  }
+
+  .explorer_body__table_row:nth-child(even) {
+    background-color: rgb(248, 248, 248);
+  }
+
+  .explorer_body__table_cell {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-basis: 100%;
+  }
+
+  .explorer_body__table_cell--link {
+    color: rgb(65, 150, 144);
+    text-decoration: none;
+  }
+
+  .explorer_body__blocks_index {
+    display: block;
+    text-decoration: none;
+    margin-top: 2rem;
+    text-align: center;
+  }
+
+  .explorer_body__blocks_button {
+    width: auto;
+    font-size: 1.5rem;
+    padding: 0.8rem 1.5rem;
+    color: rgb(65, 150, 144);
+    background-color: rgb(255, 255, 255);
+    border: 0.5px solid rgba(150, 150, 150, 0.5);
+    border-image: initial;
+    transition: background-color 0.5s;
+  }
+
+  .explorer_body__blocks_button:hover {
+    background-color: rgba(65, 150, 144, 0.5);
+    cursor: pointer;
+  }
+
+  .explorer_body__table_cell--time {
+    font-size: 0.8rem;
+  }
 </style>

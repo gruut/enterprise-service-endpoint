@@ -1,14 +1,13 @@
 <template>
-  <section class="container">
-    <img src="~assets/img/logo.png" alt="Nuxt.js Logo" class="logo" />
-    <h1 class="title">
-      User
+  <section class="block_info">
+    <h1 class="block_info__title">
+      Block
     </h1>
     <h2 class="info">
-      {{ user.name }}
+      {{ block.id }}
     </h2>
     <nuxt-link class="button" to="/">
-      Users
+      뒤로가기
     </nuxt-link>
   </section>
 </template>
@@ -19,24 +18,24 @@ import axios from '~/plugins/axios'
 export default {
   name: 'id',
   asyncData ({ params, error }) {
-    return axios.get('/api/users/' + params.id)
+    return axios.get('/api/blocks/' + params.id)
       .then((res) => {
-        return { user: res.data }
+        return { block: res.data }
       })
       .catch((e) => {
-        error({ statusCode: 404, message: 'User not found' })
+        error({ statusCode: 404, message: 'Block not found' })
       })
   },
   head () {
     return {
-      title: `User: ${this.user.name}`
+      title: `Block: ${this.block.id}`
     }
   }
 }
 </script>
 
 <style scoped>
-.title
+.block_info__title
 {
   margin-top: 30px;
 }

@@ -1,9 +1,8 @@
 const {Router} = require('express')
-const {Block} = require('../models')
-
+const {Block} = require('../../models')
 const router = Router()
 
-/* GET users listing. */
+/* GET Blocks listing. */
 router.get('/blocks', async (req, res) => {
   try {
     const blocks = await Block.findAll({
@@ -18,7 +17,7 @@ router.get('/blocks', async (req, res) => {
   }
 })
 
-/* GET user by ID. */
+/* GET Block by ID. */
 router.get('/blocks/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id)
