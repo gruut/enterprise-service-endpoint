@@ -55,6 +55,10 @@
     padding: 1rem 2rem;
   }
 
+  .explorer_body__table_row:nth-child(1) {
+    background-color: rgb(65, 150, 100);
+  }
+
   .explorer_body__table_row:nth-child(even) {
     background-color: rgb(248, 248, 248);
   }

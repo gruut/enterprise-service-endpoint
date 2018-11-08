@@ -14,6 +14,7 @@ router.get('/blocks', async (req, res) => {
     res.json(blocks)
   } catch (err) {
     res.sendStatus(500)
+    throw err
   }
 })
 
@@ -27,6 +28,7 @@ router.get('/blocks/:id', async (req, res) => {
     res.sendStatus(404)
   } catch (err) {
     res.sendStatus(500)
+    throw err
   }
 })
 
