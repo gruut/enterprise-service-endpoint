@@ -1,5 +1,5 @@
 module.exports = {
-  up: (queryInterface) => {
+  up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert('blocks', [{
       sender: 'John Doe',
       version: 1,
