@@ -9,8 +9,21 @@
     <div class="explorer_header__main_container">
       <div class="explorer_header__container_title">블록 탐색기</div>
       <div class="explorer_header__container_search">
-        <input type="text" class="explorer_header__container_search_textarea">
-        <div class="explorer_header__container_search_button">
+        <!-- TODO: autocomplete 나중에 구현 -->
+        <!--<autocomplete-->
+        <!--url="/api/blocks"-->
+        <!--anchor="height"-->
+        <!--placeholder="Block height를 입력해주세요."-->
+        <!--:on-select="getData"-->
+
+        <!--className="explorer_header__container_search_textarea"-->
+        <!--&gt;</autocomplete>-->
+        <input v-model="blockHeight" @change="findBlock"
+               placeholder="Block height를 입력해주세요"
+               input="text"
+               v-on:keyup.enter="findBlock"
+               class="explorer_header__container_search_textarea">
+        <div class="explorer_header__container_search_button" v-on:click="findBlock">
           <i class="fa fa-search"></i>
         </div>
       </div>
@@ -19,15 +32,33 @@
 </template>
 
 <script>
+  // import Autocomplete from 'vue2-autocomplete-js'
+  require('vue2-autocomplete-js/dist/style/vue2-autocomplete.css')
+
   export default {
-    name: 'Header'
+    name: 'Header',
+    // components: {Autocomplete},
+    data () {
+      return {
+        blockHeight: ''
+      }
+    },
+    methods: {
+      findBlock () {
+        console.log(this.blockHeight)
+        this.$router.push({name: 'blocks-id', params: {id: this.blockHeight}})
+      },
+      clearInput () {
+        this.blockHeight = ''
+      }
+    }
   }
 </script>
 
 <style scoped>
   .explorer_header {
     justify-content: center;
-    background-image: linear-gradient(90deg, rgb(65,150,114) 0%, rgb(65,80,90) 100%);
+    background-image: linear-gradient(90deg, rgb(65, 150, 114) 0%, rgb(65, 80, 90) 100%);
     box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px 0;
   }
 

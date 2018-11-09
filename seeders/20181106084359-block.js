@@ -43,10 +43,10 @@ for (let i = 0; i < 12; i++) {
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('blocks', blockArr)
+    return queryInterface.bulkInsert('Blocks', blockArr)
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('blocks', null, {})
+    return queryInterface.bulkDelete('Blocks', null, {})
   }
 }
