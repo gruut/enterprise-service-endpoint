@@ -1,13 +1,48 @@
 module.exports = (sequelize, DataTypes) => {
   const block = sequelize.define('Block', {
-    sender: DataTypes.STRING,
-    version: DataTypes.INTEGER,
-    blockId: DataTypes.INTEGER,
-    time: DataTypes.DATE,
-    size: DataTypes.INTEGER,
-    txcnt: DataTypes.INTEGER,
-    txlist: DataTypes.JSON
-  }, {})
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
+    version: {
+      type: DataTypes.INTEGER
+    },
+    blockId: {
+      type: DataTypes.STRING
+    },
+    time: {
+      type: DataTypes.DATE
+    },
+    size: {
+      type: DataTypes.INTEGER
+    },
+    height: {
+      type: DataTypes.INTEGER
+    },
+    txRoot: {
+      type: DataTypes.STRING
+    },
+    signerId: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    signerSignature: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    mergerId: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    mergerSignature: {
+      allowNull: false,
+      type: DataTypes.STRING
+    }
+  }, {
+    timestamp: true
+  })
   block.associate = function (models) {
     // associations can be defined here
   }

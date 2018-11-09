@@ -1,7 +1,7 @@
 <template>
   <section class="block_info">
     <div class="block_info__title">
-      Block #{{ block.id }}
+      Block #{{ block.height }}
     </div>
     <div class="block_info__table">
       <div v-for="(value, key) in block" :key="index" class="block_info__table_row">

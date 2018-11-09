@@ -1,5 +1,5 @@
 <template>
-  <block-list :blocks="blocks.slice(0,5)" :show_more="true"></block-list>
+  <block-list :blocks="blocks.slice(0, 8)" :show_more="true"></block-list>
 </template>
 
 <script>

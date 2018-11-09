@@ -7,14 +7,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      sender: {
-        type: Sequelize.STRING
-      },
       version: {
         type: Sequelize.INTEGER
       },
       blockId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       },
       time: {
         type: Sequelize.DATE
@@ -22,11 +19,27 @@ module.exports = {
       size: {
         type: Sequelize.INTEGER
       },
-      txcnt: {
+      height: {
         type: Sequelize.INTEGER
       },
-      txlist: {
-        type: Sequelize.JSON
+      txRoot: {
+        type: Sequelize.STRING
+      },
+      signerId: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      signerSignature: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      mergerId: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      mergerSignature: {
+        allowNull: false,
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

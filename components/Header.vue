@@ -1,7 +1,9 @@
 <template>
   <section class="explorer_header">
     <div class="explorer_header__container">
-      <router-link to="/" class="explorer_header__home_link">Gruut Network</router-link>
+      <router-link to="/" class="explorer_header__home_link">
+        <img src="https://gruut.network/static/img/logo.png" alt="Gruut Networks" class="explorer_header__logo_image">
+      </router-link>
     </div>
 
     <div class="explorer_header__main_container">
@@ -96,5 +98,10 @@
 
     font-weight: bold;
     font-size: 1.5rem;
+  }
+
+  .explorer_header__logo_image {
+    max-width: 40px;
+    margin-top: 2rem;
   }
 </style>
