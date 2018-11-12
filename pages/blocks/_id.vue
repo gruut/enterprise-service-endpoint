@@ -34,7 +34,9 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  $green: #00937B;
+
   .block_info {
     display: flex;
     flex-direction: column;
@@ -68,7 +70,7 @@
   }
 
   .block_info__table_row:nth-child(odd) {
-    background-color: rgba(65, 150, 100, 0.2);
+    background-color: rgba($green, 0.2);
   }
 
   .block_info__table_cell {

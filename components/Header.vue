@@ -2,7 +2,7 @@
   <section class="explorer_header">
     <div class="explorer_header__container">
       <router-link to="/" class="explorer_header__home_link">
-        <img src="https://gruut.network/static/img/logo.png" alt="Gruut Networks" class="explorer_header__logo_image">
+        <!--<img src="https://gruut.net/images/gruut_logo_small.png" alt="Gruut Networks" class="explorer_header__logo_image">-->
       </router-link>
     </div>
 
@@ -55,11 +55,13 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  $green: #00937B;
+
   .explorer_header {
     justify-content: center;
-    background-image: linear-gradient(90deg, rgb(65, 150, 114) 0%, rgb(65, 80, 90) 100%);
-    box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 3px 0;
+    background-image: linear-gradient(90deg, #00937B 0%, #8BC541 100%);
+    box-shadow: rgba(0, 0, 0, 0.5) 0 1px 3px 0;
   }
 
   .explorer_header__container {
@@ -100,7 +102,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 1px 0;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px 0;
     border-radius: 0.5rem;
   }
 

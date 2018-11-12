@@ -36,7 +36,7 @@
 </script>
 
 <style lang="scss" scoped>
-  $green: rgb(65, 150, 100);
+  $green: #00937B;
 
   .explorer_body {
     display: flex;
@@ -84,7 +84,7 @@
   }
 
   .explorer_body__table_cell--link {
-    color: rgb(65, 150, 144);
+    color: $green;
     text-decoration: none;
     white-space: nowrap;
     overflow: hidden;
@@ -99,7 +99,7 @@
   }
 
   .explorer_body__blocks_button:hover {
-    background-color: rgba(65, 150, 144, 1);
+    background-color: $green;
     color: #ffffff;
     cursor: pointer;
   }
