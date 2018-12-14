@@ -1,9 +1,13 @@
 <template>
   <section class="explorer_header">
     <div class="explorer_header__container">
-      <router-link to="/" class="explorer_header__home_link">
-        <!--<img src="https://gruut.net/images/gruut_logo_small.png" alt="Gruut Networks" class="explorer_header__logo_image">-->
-      </router-link>
+      <nav class="explorer_header__nav">
+        <a class="explorer_header__generate_tx_link">
+          <span>
+            트랜잭션 생성
+          </span>
+        </a>
+      </nav>
     </div>
 
     <div class="explorer_header__main_container">
@@ -49,16 +53,14 @@
   $green: #00937B;
 
   .explorer_header {
-    justify-content: center;
     background-image: linear-gradient(90deg, #00937B 0%, #8BC541 100%);
     box-shadow: rgba(0, 0, 0, 0.5) 0 1px 3px 0;
   }
 
   .explorer_header__container {
-    width: 100%;
-    height: 4.5rem;
-    padding: 0 3rem;
     display: flex;
+    height: 4.5rem;
+    padding: 0 8rem;
     flex-direction: column;
     justify-content: center;
   }
@@ -126,5 +128,31 @@
   .explorer_header__logo_image {
     max-width: 40px;
     margin-top: 2rem;
+  }
+
+  .explorer_header__nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .explorer_header__generate_tx_link {
+    width: 130px;
+    height: 40px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    color: #F5F5F5;
+
+    border-radius: 3px;
+    border: 2px solid #F5F5F5;
+
+    cursor: pointer;
+    transition: all 0.25s ease;
   }
 </style>
