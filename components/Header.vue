@@ -9,15 +9,7 @@
     <div class="explorer_header__main_container">
       <div class="explorer_header__container_title">블록 탐색기</div>
       <div class="explorer_header__container_search">
-        <!-- TODO: autocomplete 나중에 구현 -->
-        <!--<autocomplete-->
-        <!--url="/api/blocks"-->
-        <!--anchor="height"-->
-        <!--placeholder="Block height를 입력해주세요."-->
-        <!--:on-select="getData"-->
 
-        <!--className="explorer_header__container_search_textarea"-->
-        <!--&gt;</autocomplete>-->
         <input v-model="blockHeight" @change="findBlock"
                placeholder="Block height를 입력해주세요"
                input="text"
@@ -32,12 +24,10 @@
 </template>
 
 <script>
-  // import Autocomplete from 'vue2-autocomplete-js'
   require('vue2-autocomplete-js/dist/style/vue2-autocomplete.css')
 
   export default {
     name: 'Header',
-    // components: {Autocomplete},
     data () {
       return {
         blockHeight: ''

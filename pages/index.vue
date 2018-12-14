@@ -10,7 +10,7 @@
   export default {
     head () {
       return {
-        title: 'Blockchain Explorer'
+        title: 'Gruut Enterprise Network'
       }
     },
 
