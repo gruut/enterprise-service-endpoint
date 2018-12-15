@@ -2,7 +2,7 @@
   <section class="explorer_header">
     <div class="explorer_header__container">
       <nav class="explorer_header__nav">
-        <a class="explorer_header__generate_tx_link">
+        <a href="/blocks/new" class="explorer_header__generate_tx_link">
           <span>
             트랜잭션 생성
           </span>
