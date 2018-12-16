@@ -23,7 +23,7 @@ router.post('/transactions', upload.any(), async (req, res) => {
     await requestData.save()
 
     const dataObj = {
-      'rId': requestData.requester_id.toString(),
+      'rID': requestData.requester_id.toString(),
       'data_id': requestData.id.toString(),
       'digest': crypto.createHash('sha256').update(content).digest('base64')
     }

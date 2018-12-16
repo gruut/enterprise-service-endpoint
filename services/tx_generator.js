@@ -27,7 +27,7 @@ class TxGenerator {
 
   sendTransaction (content) {
     const tx = this.generateTransaction(content)
-    const packedTx = utils.pack(MSG_TX, tx, tx.rId)
+    const packedTx = utils.pack(MSG_TX, tx, tx.rID)
     const msg = utils.protobuf_msg_serializer(TX_PROTO_PATH, 'grpc_se.GrpcMsgTX', packedTx)
     this.client.transaction(msg, res => {
       // TODO: logger
@@ -39,11 +39,11 @@ class TxGenerator {
     let transaction = {}
 
     // TODO: txid?
-    transaction.txid = TxGenerator.hash('1')
+    transaction.txid = TxGenerator.hash('1', 'base64')
     transaction.time = Math.floor(new Date().getTime() / 1000).toString()
-    transaction.rId = TxGenerator.hash(content['rId'], 'hex', 16)
+    transaction.rID = TxGenerator.hash(content['rID'], 'hex', 16)
     transaction.type = 'digests'
-    transaction.content = content['digest']
+    transaction.content = Object.values(content)
 
     transaction.rSig = TxGenerator.sign(transaction)
 
@@ -67,7 +67,7 @@ class TxGenerator {
     timeBuffer.writeInt32BE(parseInt(transaction.time, 10), 4)
     bufferList.push(timeBuffer)
 
-    bufferList.push(Buffer.from(transaction.rId, 'base64'))
+    bufferList.push(Buffer.from(transaction.rID, 'base64'))
     bufferList.push(Buffer.from(transaction.type))
 
     _.forEach(transaction.content, (content) => {
