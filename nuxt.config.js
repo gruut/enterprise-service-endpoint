@@ -36,6 +36,10 @@ module.exports = {
           exclude: /(node_modules)/
         })
       }
+      config.node = {
+        fs: 'empty',
+        child_process: 'empty'
+      }
     }
   },
   serverMiddleware: [
