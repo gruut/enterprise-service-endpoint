@@ -1,23 +1,24 @@
 <template>
   <div class="form_container">
-    <div class="form_container__error_message">
-      <p v-show="!email.valid">유효한 이메일 주소를 입력해주세요.</p>
-    </div>
-    <form class="form_container__form">
+    <form class="form_container__form" v-on:submit.prevent="sendTransaction">
       <div class="form_container__input_field">
         <label class="form_container__form_label" for="name">이름</label>
         <input type="text" name="name" id="name" class="form_container__form_input" v-model="name" required>
       </div>
       <div class="form_container__input_field">
-        <label class="form_container__form_label" for="email">이메일</label>
-        <input type="text" name="email" id="email" class="form_container__form_input" v-model="email" required>
+        <div>
+          <label class="form_container__form_label" for="email">이메일</label>
+          <span class="form_container__error_message" v-show="!email.valid">유효한 이메일 주소를 입력해주세요.</span>
+        </div>
+        <input type="text" name="email" id="email" class="form_container__form_input" v-model="email.value" required>
       </div>
       <div class="form_container__input_field">
         <label class="form_container__form_label" for="file">파일 업로드</label>
-        <input type="file" name="file" id="file" class="form_container__form_input" required>
+        <input type="file" name="file" id="file" class="form_container__form_input"
+               accept=".jpg, .jpeg, .png, .pdf" required>
       </div>
       <div class="form_container__button_container">
-        <button class="form_container__submit_button">
+        <button type="submit" class="form_container__submit_button">
           제출
         </button>
       </div>
@@ -26,6 +27,8 @@
 </template>
 
 <script>
+  import axios from '~/plugins/axios'
+
   export default {
     name: 'new',
     data () {
@@ -38,13 +41,39 @@
       }
     },
     methods: {
-      isEmail: (address) => {
+      isEmail: function (address) {
         // Regular expression from W3C HTML5.2 input specification:
         // https://www.w3.org/TR/html/sec-forms.html#email-state-typeemail
         // eslint-disable-next-line no-useless-escape
         const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
 
         return emailRegExp.test(address)
+      },
+      sendTransaction: function () {
+        const fileElem = document.getElementById('file')
+        const fileReader = new FileReader()
+
+        fileReader.readAsBinaryString(fileElem.files[0])
+        fileReader.onload = async () => {
+          let formData = new FormData()
+          formData.append('file', fileReader.result)
+          axios.post('/api/transactions',
+            formData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }
+          ).then().catch((err) => {
+            // TODO: log
+            console.log(err)
+          })
+        }
+      }
+    },
+    watch: {
+      'email.value': function (input) {
+        this.email.valid = this.isEmail(input)
       }
     }
   }
@@ -81,10 +110,19 @@
   }
 
   .form_container__form_label {
+    display: inline-block;
     font-size: 1.3rem;
     font-family: "Apple SD Gothic Neo",sans-serif;
     color: #7f828b;
+
+    margin-right: 5px;
     margin-bottom: 5px;
+  }
+
+  .form_container__error_message {
+    display: inline-block;
+    font-family: "Apple SD Gothic Neo",sans-serif;
+    color: #ff5555;
   }
 
   .form_container__form_input {
