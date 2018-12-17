@@ -1,20 +1,15 @@
 /**
  * Common functions
  */
-// all about buffer encoding!
+// Buffer encoding, Hash
 // https://nodejs.org/docs/latest/api/buffer.html#buffer_class_method_buffer_from_string_encoding
 const lz4 = require('lz4');
 const protobuf = require("protobufjs");
-const tools = require('./my_tools')
+var crypto = require('crypto');
 
 const HEADER_LENGTH = 32;
 const MAC_LENGTH = 64;
-const MSG_TYPE = {
-  MSG_JOIN: 0x54,
-  MSG_REQ_SSIG: 0xB2,
-  MSG_SSIG: 0xB3,
-  MSG_TX: 0xB1
-};
+
 const MAX_MSG_LENGTH = 4 * 1024 * 1024; /* temporary, 4MB */
 
 const pack = function (MSG_TYPE, data, sender_id){
@@ -99,7 +94,7 @@ const checkHMAC = function (data, header){
 };
 
 const buildHMAC = function (zip_data){
-  return new Buffer.from(tools.getHMAC(zip_data), 'hex');
+  return new Buffer.from(self.getHMAC(zip_data), 'hex');
 };
 
 // build front 6 bytes of the header
@@ -178,12 +173,39 @@ const pushBufferList = function(bf_list, length, single_buffer){
   return length;
 }
 
-module.exports = {
+var getHMAC = function(data){
+  const secret = '0x0000000000000000000000000000000000000000000000000000000000000000';
+  return crypto.createHmac('sha256', Buffer.from(secret, 'hex'))
+    .update(data)
+    .digest('hex');
+}
+
+var getSHA256 = function(data){
+  return crypto.createHash('sha256').update(data).digest('base64');
+};
+
+var get64Hash = function(data){
+  return crypto.createHash('sha256').update(data).digest('hex').substr(0, 16);
+};
+
+var get32Hash = function(data){
+  return crypto.createHash('sha256').update(data).digest('hex').substr(0, 8);
+};
+
+const getTimestamp = function(){
+  return (Math.floor(Date.now() / 1000)).toString();
+};
+
+const self = module.exports = {
   pack : pack,
   unpack : unpack,
   zipIt : zipIt,
   unzipIt : unzipIt,
   protobuf_msg_serializer : protobuf_msg_serializer,
-  MSG_TYPE : MSG_TYPE,
-  txToBuffer : txToBuffer
+  txToBuffer : txToBuffer,
+  getHMAC : getHMAC,
+  getSHA256 : getSHA256,
+  get64Hash : get64Hash,
+  get32Hash : get32Hash,
+  getTimestamp : getTimestamp
 };
