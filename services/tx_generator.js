@@ -18,6 +18,39 @@ const LOAD_ARGS = {
   oneofs: true
 }
 
+function hash (data, encoding = 'hex', len) {
+  let value = crypto.createHash('sha256').update(data).digest(encoding)
+  if (len > 0) {
+    value = value.substr(0, len)
+  }
+
+  return value
+}
+
+function sign (transaction) {
+  let bufferList = []
+
+  bufferList.push(Buffer.from(transaction.txid, 'base64'))
+
+  const timeBuffer = Buffer.allocUnsafe(8)
+  timeBuffer.writeInt32BE(0x0, 0)
+  timeBuffer.writeInt32BE(parseInt(transaction.time, 10), 4)
+  bufferList.push(timeBuffer)
+
+  bufferList.push(Buffer.from(transaction.rID, 'base64'))
+  bufferList.push(Buffer.from(transaction.type))
+
+  _.each(transaction.content, (content) => {
+    bufferList.push(Buffer.from(content))
+  })
+  const sigBuffer = Buffer.concat(bufferList)
+
+  const privateKey = process.env.PRIVATE_KEY
+  const signer = crypto.createSign('sha256')
+  signer.update(sigBuffer)
+  return signer.sign(privateKey, 'base64')
+}
+
 class TxGenerator {
   constructor () {
     const packageDefinition = protoLoader.loadSync(TX_PROTO_PATH, LOAD_ARGS)
@@ -48,48 +81,15 @@ class TxGenerator {
   generateTransaction (content) {
     let transaction = {}
 
-    transaction.txid = TxGenerator.hash(crypto.randomBytes(TRANSACTION_ID_SIZE), 'base64')
+    transaction.txid = hash(crypto.randomBytes(TRANSACTION_ID_SIZE), 'base64')
     transaction.time = utils.getTimestamp()
-    transaction.rID = TxGenerator.hash(content['rID'], 'base64', REQUESTER_ID_SIZE)
+    transaction.rID = hash(content['rID'], 'base64', REQUESTER_ID_SIZE)
     transaction.type = 'digests'
     transaction.content = Object.values(content)
 
-    transaction.rSig = TxGenerator.sign(transaction)
+    transaction.rSig = sign(transaction)
 
     return transaction
-  }
-
-  static hash (data, encoding = 'hex', len) {
-    let value = crypto.createHash('sha256').update(data).digest(encoding)
-    if (len > 0) {
-      value = value.substr(0, len)
-    }
-
-    return value
-  }
-
-  static sign (transaction) {
-    let bufferList = []
-
-    bufferList.push(Buffer.from(transaction.txid, 'base64'))
-
-    const timeBuffer = Buffer.allocUnsafe(8)
-    timeBuffer.writeInt32BE(0x0, 0)
-    timeBuffer.writeInt32BE(parseInt(transaction.time, 10), 4)
-    bufferList.push(timeBuffer)
-
-    bufferList.push(Buffer.from(transaction.rID, 'base64'))
-    bufferList.push(Buffer.from(transaction.type))
-
-    _.each(transaction.content, (content) => {
-      bufferList.push(Buffer.from(content))
-    })
-    const sigBuffer = Buffer.concat(bufferList)
-
-    const privateKey = process.env.PRIVATE_KEY
-    const signer = crypto.createSign('sha256')
-    signer.update(sigBuffer)
-    return signer.sign(privateKey, 'base64')
   }
 }
 
