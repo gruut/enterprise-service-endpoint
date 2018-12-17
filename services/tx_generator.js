@@ -6,6 +6,9 @@ const _ = require('../plugins/partial')
 const Path = require('path')
 
 const MSG_TX = 0xB1
+const TRANSACTION_ID_SIZE = 32
+const REQUESTER_ID_SIZE = 8
+
 const TX_PROTO_PATH = Path.join(__dirname, '../protos/tx.proto')
 const LOAD_ARGS = {
   keepCase: true,
@@ -45,10 +48,9 @@ class TxGenerator {
   generateTransaction (content) {
     let transaction = {}
 
-    // TODO: txid?
-    transaction.txid = TxGenerator.hash('1', 'base64')
-    transaction.time = Math.floor(new Date().getTime() / 1000).toString()
-    transaction.rID = TxGenerator.hash(content['rID'], 'hex', 16)
+    transaction.txid = TxGenerator.hash(crypto.randomBytes(TRANSACTION_ID_SIZE), 'base64')
+    transaction.time = utils.getTimestamp()
+    transaction.rID = TxGenerator.hash(content['rID'], 'base64', REQUESTER_ID_SIZE)
     transaction.type = 'digests'
     transaction.content = Object.values(content)
 
