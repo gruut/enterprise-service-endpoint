@@ -2,7 +2,7 @@ const grpc = require('grpc')
 const protoLoader = require('@grpc/proto-loader')
 const crypto = require('crypto')
 const utils = require('../plugins/my_utils')
-const _ = require('../plugins/underscore')
+const _ = require('../plugins/partial')
 const Path = require('path')
 
 const MSG_TX = 0xB1
@@ -21,18 +21,26 @@ class TxGenerator {
     const ProtoTransaction = grpc.loadPackageDefinition(packageDefinition).grpc_se
 
     // TODO: config 파일
-    const remoteServerAddr = '192.168.0.6:50051'
+    const remoteServerAddr = '10.10.10.108:50051'
     this.client = new ProtoTransaction.GruutSeService(remoteServerAddr, grpc.credentials.createInsecure())
   }
 
   sendTransaction (content) {
-    const tx = this.generateTransaction(content)
-    const packedTx = utils.pack(MSG_TX, tx, tx.rID)
-    const msg = utils.protobuf_msg_serializer(TX_PROTO_PATH, 'grpc_se.GrpcMsgTX', packedTx)
-    this.client.transaction(msg, res => {
-      // TODO: logger
-      console.log('I got this res: ' + JSON.stringify(res))
-    })
+    _.go(content,
+      this.generateTransaction,
+      (tx) => {
+        return utils.pack(MSG_TX, tx, tx.rID)
+      },
+      (packedTx) => {
+        return utils.protobuf_msg_serializer(TX_PROTO_PATH, 'grpc_se.GrpcMsgTX', packedTx)
+      },
+      (msg) => {
+        this.client.transaction(msg, res => {
+          // TODO: logger
+          console.log('I got this res: ' + JSON.stringify(res))
+        })
+      }
+    )
   }
 
   generateTransaction (content) {
@@ -52,7 +60,9 @@ class TxGenerator {
 
   static hash (data, encoding = 'hex', len) {
     let value = crypto.createHash('sha256').update(data).digest(encoding)
-    if (len > 0) { value = value.substr(0, len) }
+    if (len > 0) {
+      value = value.substr(0, len)
+    }
 
     return value
   }
@@ -70,7 +80,7 @@ class TxGenerator {
     bufferList.push(Buffer.from(transaction.rID, 'base64'))
     bufferList.push(Buffer.from(transaction.type))
 
-    _.forEach(transaction.content, (content) => {
+    _.each(transaction.content, (content) => {
       bufferList.push(Buffer.from(content))
     })
     const sigBuffer = Buffer.concat(bufferList)
