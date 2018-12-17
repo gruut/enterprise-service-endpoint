@@ -144,22 +144,6 @@ const protobuf_msg_serializer = function(PROTO_PATH, msg_type_name, packed_msg){
   return serialized_msg;
 };
 
-const txToBuffer = function(tx){
-  let length = 0;
-  let bf_list = [];
-
-  length = pushBufferList(bf_list, length, Buffer.from(tx.txid, 'base64'));
-  length = pushBufferList(bf_list, length, getBufferedTimestamp(tx.time));
-  length = pushBufferList(bf_list, length, Buffer.from(tx.rID, 'base64'));
-  length = pushBufferList(bf_list, length, Buffer.from(tx.type));
-  for (let i=0; i<tx.content.length; i++){
-    length = pushBufferList(bf_list, length, Buffer.from(tx.content[i]));
-  }
-
-  const bf_combined = Buffer.concat(bf_list, length);
-  return bf_combined;
-}
-
 const getBufferedTimestamp = function(str_timestamp){
   const bf_time = Buffer.allocUnsafe(8);
   bf_time.writeInt32BE(0x0, 0);
@@ -180,18 +164,6 @@ var getHMAC = function(data){
     .digest('hex');
 }
 
-var getSHA256 = function(data){
-  return crypto.createHash('sha256').update(data).digest('base64');
-};
-
-var get64Hash = function(data){
-  return crypto.createHash('sha256').update(data).digest('hex').substr(0, 16);
-};
-
-var get32Hash = function(data){
-  return crypto.createHash('sha256').update(data).digest('hex').substr(0, 8);
-};
-
 const getTimestamp = function(){
   return (Math.floor(Date.now() / 1000)).toString();
 };
@@ -202,10 +174,6 @@ const self = module.exports = {
   zipIt : zipIt,
   unzipIt : unzipIt,
   protobuf_msg_serializer : protobuf_msg_serializer,
-  txToBuffer : txToBuffer,
   getHMAC : getHMAC,
-  getSHA256 : getSHA256,
-  get64Hash : get64Hash,
-  get32Hash : get32Hash,
   getTimestamp : getTimestamp
 };
