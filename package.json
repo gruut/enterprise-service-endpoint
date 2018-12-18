@@ -5,7 +5,7 @@
   "author": "Junsuk Park <park64kr63@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "DEBUG=nuxt:*,app:* nuxt",
+    "dev": "DEBUG=nuxt:*,app:* nodemon --watch api --exec \"nuxt\"",
     "build": "nuxt build",
     "start": "nuxt build && nuxt start --env",
     "precommit": "npm run lint",
@@ -32,6 +32,7 @@
     "multer": "^1.4.1",
     "mysql2": "^1.6.3",
     "node-sass": "^4.10.0",
+    "nodemon": "^1.18.9",
     "nuxt": "latest",
     "protobufjs": "^6.8.8",
     "sass-loader": "^7.1.0",

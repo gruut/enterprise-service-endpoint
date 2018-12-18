@@ -64,8 +64,11 @@
                 'Content-Type': 'multipart/form-data'
               }
             }
-          ).then().catch((err) => {
-            // TODO: log
+          ).then((res) => {
+            if (res.status === 200) {
+              alert('요청이 처리되었습니다.')
+            }
+          }).catch((err) => {
             console.log(err)
           })
         }
