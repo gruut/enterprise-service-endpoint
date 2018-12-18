@@ -2,6 +2,9 @@
   <section class="explorer_header">
     <div class="explorer_header__container">
       <nav class="explorer_header__nav">
+        <a href="/" class="explorer_header__logo_image">
+          <img width="170" height="90" src="../assets/img/gruut_new_logo_white.png" alt="logo">
+        </a>
         <a href="/transaction/new" class="explorer_header__generate_tx_link">
           <span>
             트랜잭션 생성
@@ -59,7 +62,7 @@
 
   .explorer_header__container {
     display: flex;
-    height: 4.5rem;
+    height: 7rem;
     padding: 0 8rem;
     flex-direction: column;
     justify-content: center;
@@ -126,14 +129,14 @@
   }
 
   .explorer_header__logo_image {
-    max-width: 40px;
-    margin-top: 2rem;
+    display: flex;
   }
 
   .explorer_header__nav {
     display: flex;
     flex-direction: row;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .explorer_header__generate_tx_link {

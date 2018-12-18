@@ -18,7 +18,7 @@
       </div>
     </div>
     <nuxt-link v-if="show_more" to="/blocks" class="explorer_body__blocks_index">
-      <button type="button" v-if="blocks.length > 0" class="explorer_body__blocks_button">더보기</button>
+      <button v-if="blocks.length > 0" type="button" class="explorer_body__blocks_button">더보기</button>
     </nuxt-link>
   </section>
 </template>

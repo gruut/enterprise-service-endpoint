@@ -29,7 +29,11 @@ router.post('/transactions', upload.any(), async (req, res) => {
     }
 
     const txGenerator = new TxGenerator()
-    txGenerator.sendTransaction(dataObj)
+    if (txGenerator.sendTransaction(dataObj)) {
+      res.sendStatus(200)
+    } else {
+      res.sendStatus(500)
+    }
   } catch (err) {
     // TODO: log
     debug(err)
