@@ -16,7 +16,7 @@ router.post('/transactions', upload.any(), async (req, res) => {
   try {
     const content = req.body.file
     let requestData = RequestData.build({
-      requester_id: uuidv4(),
+      requester_id: process.env.MY_ID,
       data: content,
       signed: false
     })
