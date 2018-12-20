@@ -35,7 +35,7 @@ router.get('/blocks/:id', async (req, res) => {
 })
 
 /* POST handle MSG_HEADER */
-router.post('/blocks', bodyParser.json(), (req, res) => {
+router.post('/blocks', bodyParser.urlencoded({ extended: false }), (req, res) => {
   try {
     // TODO: save block
     debug(req.body)
