@@ -11,26 +11,16 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       blockId: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       time: {
         type: Sequelize.DATE
-      },
-      size: {
-        type: Sequelize.INTEGER
       },
       height: {
         type: Sequelize.INTEGER
       },
       txRoot: {
-        type: Sequelize.STRING
-      },
-      signerId: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
-      signerSignature: {
-        allowNull: false,
         type: Sequelize.STRING
       },
       mergerId: {
