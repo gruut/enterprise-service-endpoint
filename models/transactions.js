@@ -1,24 +1,29 @@
 module.exports = (sequelize, DataTypes) => {
-  const Transactions = sequelize.define('Transactions', {
-    transaction_id: DataTypes.STRING,
+  const Transaction = sequelize.define('Transaction', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
     transactionId: {
-      type: sequelize.STRING
+      type: DataTypes.STRING
     },
     blockId: {
-      type: sequelize.INTEGER
+      type: DataTypes.INTEGER
     },
     createdAt: {
       allowNull: false,
-      type: sequelize.DATE
+      type: DataTypes.DATE
     },
     updatedAt: {
       allowNull: false,
-      type: sequelize.DATE
+      type: DataTypes.DATE
     }
   }, {})
-  Transactions.associate = function (models) {
+  Transaction.associate = function (models) {
     // associations can be defined here
-    Transactions.belongsTo(models.Block)
+    Transaction.belongsTo(models.Block)
   }
-  return Transactions
+  return Transaction
 }

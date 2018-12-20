@@ -1,17 +1,23 @@
 module.exports = (sequelize, DataTypes) => {
-  const Signers = sequelize.define('Signers', {
+  const Signer = sequelize.define('Signer', {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
     signerId: DataTypes.STRING,
     signerSignature: {
-      type: sequelize.STRING
+      type: DataTypes.STRING(400)
     },
     blockId: {
-      type: sequelize.INTEGER
+      type: DataTypes.INTEGER
     }
   },
   {})
-  Signers.associate = (models) => {
+  Signer.associate = (models) => {
     // associations can be defined here
-    Signers.belongsTo(models.Block)
+    Signer.belongsTo(models.Block)
   }
-  return Signers
+  return Signer
 }

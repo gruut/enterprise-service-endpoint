@@ -15,21 +15,10 @@ module.exports = (sequelize, DataTypes) => {
     time: {
       type: DataTypes.DATE
     },
-    size: {
-      type: DataTypes.INTEGER
-    },
     height: {
       type: DataTypes.INTEGER
     },
     txRoot: {
-      type: DataTypes.STRING
-    },
-    signerId: {
-      allowNull: false,
-      type: DataTypes.STRING
-    },
-    signerSignature: {
-      allowNull: false,
       type: DataTypes.STRING
     },
     mergerId: {

@@ -1,5 +1,5 @@
 const {Router} = require('express')
-const {Block} = require('../../models')
+const {Block, Signer, Transaction} = require('../../models')
 const bodyParser = require('body-parser')
 const debug = require('debug')('app:demo')
 const router = Router()
@@ -46,14 +46,38 @@ router.post('/blocks', bodyParser.urlencoded({ extended: false }), (req, res) =>
         const body = message.substr(HEADER_LENGTH)
         return JSON.parse(body)
       },
-      (jsonObj) => {
+      async (jsonObj) => {
         const blockRawJson = jsonObj.blockraw
-        debug(blockRawJson)
-        // return Buffer.from(blockRaw, 'base64').toString()
-        return blockRawJson
-      },
-      (body) => {
-        return true
+        // TODO: mergerSig는 temp값(루이지 테스트)
+        const block = Block.build({
+          version: blockRawJson.ver,
+          blockId: blockRawJson.bID,
+          time: new Date(parseInt(`${blockRawJson.time}000`)),
+          height: blockRawJson.hgt,
+          txRoot: blockRawJson.txrt,
+          mergerId: blockRawJson.mID,
+          mergerSignature: '1'
+        })
+        await block.save()
+
+        _.each(blockRawJson.SSig, async (signer) => {
+          const s = Signer.build({
+            signerId: signer.sID,
+            signerSignature: signer.sig,
+            blockId: block.id
+          })
+
+          await s.save()
+        })
+
+        _.each(blockRawJson.txids, async (txId) => {
+          const t = Transaction.build({
+            transactionId: txId,
+            blockId: block.id
+          })
+
+          await t.save()
+        })
       }
     )
     res.sendStatus(200)

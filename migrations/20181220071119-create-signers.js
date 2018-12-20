@@ -11,7 +11,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       signerSignature: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(400)
       },
       blockId: {
         type: Sequelize.INTEGER,
