@@ -94,7 +94,7 @@ class TxGenerator {
     transaction.txid = hash(crypto.randomBytes(TRANSACTION_ID_SIZE), 'base64')
     transaction.time = utils.getTimestamp()
     transaction.rID = hash(content['rID'], 'base64', REQUESTER_ID_SIZE)
-    transaction.type = 'digests'
+    transaction.type = 'DIGESTS'
     transaction.content = Object.values(content)
 
     transaction.rSig = sign(transaction)

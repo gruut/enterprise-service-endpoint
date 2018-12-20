@@ -151,12 +151,6 @@ const getBufferedTimestamp = function(str_timestamp){
   return bf_time;
 }
 
-const pushBufferList = function(bf_list, length, single_buffer){
-  bf_list.push(single_buffer);
-  length += single_buffer.length;
-  return length;
-}
-
 var getHMAC = function(data){
   const secret = '0x0000000000000000000000000000000000000000000000000000000000000000';
   return crypto.createHmac('sha256', Buffer.from(secret, 'hex'))
@@ -175,5 +169,6 @@ const self = module.exports = {
   unzipIt : unzipIt,
   protobuf_msg_serializer : protobuf_msg_serializer,
   getHMAC : getHMAC,
-  getTimestamp : getTimestamp
+  getTimestamp : getTimestamp,
+  getBufferedTimestamp: getBufferedTimestamp
 };

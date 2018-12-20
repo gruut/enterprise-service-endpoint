@@ -20,6 +20,7 @@ router.post('/transactions', upload.any(), async (req, res) => {
       data: content,
       signed: false
     })
+    // TODO: 요청이 성공했을때만 저장하도록 수정
     await requestData.save()
 
     const dataObj = {
