@@ -3,6 +3,9 @@ const {Block} = require('../../models')
 const bodyParser = require('body-parser')
 const debug = require('debug')('app:demo')
 const router = Router()
+const _ = require('../../plugins/partial')
+
+const HEADER_LENGTH = 32
 
 /* GET Blocks listing. */
 router.get('/blocks', async (req, res) => {
@@ -37,8 +40,22 @@ router.get('/blocks/:id', async (req, res) => {
 /* POST handle MSG_HEADER */
 router.post('/blocks', bodyParser.urlencoded({ extended: false }), (req, res) => {
   try {
-    // TODO: save block
-    debug(req.body)
+    _.go(req.body['message'],
+      (message) => {
+        // TODO: header 검증
+        const body = message.substr(HEADER_LENGTH)
+        return JSON.parse(body)
+      },
+      (jsonObj) => {
+        const blockRawJson = jsonObj.blockraw
+        debug(blockRawJson)
+        // return Buffer.from(blockRaw, 'base64').toString()
+        return blockRawJson
+      },
+      (body) => {
+        return true
+      }
+    )
     res.sendStatus(200)
   } catch (err) {
     res.sendStatus(500)
