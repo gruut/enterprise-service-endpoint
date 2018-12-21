@@ -29,7 +29,8 @@ router.get('/blocks/:id', async (req, res) => {
     const id = parseInt(req.params.id)
     const block = await Block.findOne(
       {
-        where: {id}
+        where: {id},
+        attributes: {exclude: 'updatedAt'}
       })
 
     const transactions = await Transaction.findAll({where: {blockId: id}})
