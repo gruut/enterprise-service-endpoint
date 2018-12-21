@@ -4,9 +4,21 @@
       Block #{{ block.height }}
     </div>
     <div class="block_info__table">
-      <div v-for="(value, key) in block" :key="index" class="block_info__table_row">
+      <div v-for="(value, key) in block" class="block_info__table_row">
         <div class="block_info__table_cell">{{ key }}</div>
         <div class="block_info__table_cell">{{ value }}</div>
+      </div>
+    </div>
+
+    <div v-for="transaction in transactions">
+      <div class="block_info__title">
+        Transactions
+      </div>
+      <div class="block_info__table">
+        <div v-for="(value, key) in transaction" class="block_info__table_row">
+          <div class="block_info__table_cell">{{ key }}</div>
+          <div class="block_info__table_cell">{{ value }}</div>
+        </div>
       </div>
     </div>
   </section>
@@ -14,15 +26,20 @@
 
 <script>
   import axios from '~/plugins/axios'
-
   export default {
     name: 'id',
     asyncData ({params, error}) {
       return axios.get('/api/blocks/' + params.id)
         .then((res) => {
-          return {block: res.data}
+          const receivedData = res.data
+
+          return {
+            block: receivedData.block,
+            transactions: receivedData.transactions
+          }
         })
         .catch((e) => {
+          console.log(e)
           error({statusCode: 404, message: 'Block not found'})
         })
     },
@@ -76,11 +93,11 @@
   .block_info__table_cell {
     flex-grow: 1;
     flex-basis: 100%;
-
     font-size: 1rem;
   }
 
   .block_info__table_cell:nth-child(even) {
     flex-grow: 1;
+    text-align: center;
   }
 </style>

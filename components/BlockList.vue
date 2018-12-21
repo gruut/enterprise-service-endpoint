@@ -5,7 +5,7 @@
         <div class="explorer_body__table_cell explorer_body__table_cell--header">Block ID</div>
         <div class="explorer_body__table_cell explorer_body__table_cell--header">Block Version</div>
         <div class="explorer_body__table_cell explorer_body__table_cell--header explorer_body__table_cell--time">Block 생성시간</div>
-        <div class="explorer_body__table_cell explorer_body__table_cell--header">크기(KB)</div>
+        <div class="explorer_body__table_cell explorer_body__table_cell--header">Block height</div>
       </div>
       <div v-for="(block, index) in blocks" :key="index" class="explorer_body__table_row">
         <nuxt-link :to="{ name: 'blocks-id', params: { id: block.id }}"
@@ -14,7 +14,7 @@
         </nuxt-link>
         <div class="explorer_body__table_cell">{{ block.version }}</div>
         <div class="explorer_body__table_cell explorer_body__table_cell--time">{{ block.time }}</div>
-        <div class="explorer_body__table_cell">{{ block.size }}</div>
+        <div class="explorer_body__table_cell">{{ block.height }}</div>
       </div>
     </div>
     <nuxt-link v-if="show_more" to="/blocks" class="explorer_body__blocks_index">

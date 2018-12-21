@@ -8,7 +8,7 @@
   const moment = require('moment')
 
   export default {
-    name: '_blocks.vue',
+    name: 'blocks',
     components: {
       'block-list': BlockList
     },

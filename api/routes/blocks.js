@@ -27,10 +27,21 @@ router.get('/blocks', async (req, res) => {
 router.get('/blocks/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id)
-    const block = await Block.findOne({where: {id}})
-    if (block) res.json(block)
+    const block = await Block.findOne(
+      {
+        where: {id}
+      })
 
-    res.sendStatus(404)
+    const transactions = await Transaction.findAll({where: {blockId: id}})
+
+    if (block) {
+      res.json({
+        block,
+        transactions
+      })
+    } else {
+      res.sendStatus(400)
+    }
   } catch (err) {
     res.sendStatus(500)
     throw err
@@ -38,7 +49,7 @@ router.get('/blocks/:id', async (req, res) => {
 })
 
 /* POST handle MSG_HEADER */
-router.post('/blocks', bodyParser.urlencoded({ extended: false }), (req, res) => {
+router.post('/blocks', bodyParser.urlencoded({extended: false}), (req, res) => {
   try {
     _.go(req.body['message'],
       (message) => {
