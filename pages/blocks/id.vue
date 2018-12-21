@@ -4,20 +4,50 @@
       Block #{{ block.height }}
     </div>
     <div class="block_info__table">
-      <div v-for="(value, key) in block" class="block_info__table_row">
-        <div class="block_info__table_cell">{{ key }}</div>
-        <div class="block_info__table_cell">{{ value }}</div>
+      <div class="block_info__table_row">
+        <div class="block_info__table_cell">블럭 ID</div>
+        <div class="block_info__table_cell">{{ block.blockId }}</div>
+      </div>
+
+      <div class="block_info__table_row">
+        <div class="block_info__table_cell">높이</div>
+        <div class="block_info__table_cell">{{ block.height }}</div>
+      </div>
+
+      <div class="block_info__table_row">
+        <div class="block_info__table_cell">트랜잭션 루트</div>
+        <div class="block_info__table_cell">{{ block.txRoot }}</div>
+      </div>
+
+      <div class="block_info__table_row">
+        <div class="block_info__table_cell">Merger ID</div>
+        <div class="block_info__table_cell">{{ block.mergerId }}</div>
+      </div>
+
+      <div class="block_info__table_row">
+        <div class="block_info__table_cell">Merger 서명</div>
+        <div class="block_info__table_cell">{{ block.mergerSignature }}</div>
+      </div>
+
+      <div class="block_info__table_row">
+        <div class="block_info__table_cell">버전</div>
+        <div class="block_info__table_cell">{{ block.version }}</div>
+      </div>
+
+      <div class="block_info__table_row">
+        <div class="block_info__table_cell">생성시간</div>
+        <div class="block_info__table_cell">{{ block.time }}</div>
       </div>
     </div>
 
-    <div v-for="transaction in transactions">
+    <div v-if="transactions.length > 0">
       <div class="block_info__title">
         Transactions
       </div>
       <div class="block_info__table">
-        <div v-for="(value, key) in transaction" class="block_info__table_row">
-          <div class="block_info__table_cell">{{ key }}</div>
-          <div class="block_info__table_cell">{{ value }}</div>
+        <div v-for="transaction in transactions" class="block_info__table_row">
+          <div class="block_info__table_cell">트랜잭션 ID</div>
+          <div class="block_info__table_cell">{{ transaction.transactionId }}</div>
         </div>
       </div>
     </div>
@@ -45,7 +75,7 @@
     },
     head () {
       return {
-        title: `Block ${this.block.id}`
+        title: `Block ${this.block.height}`
       }
     }
   }
@@ -63,7 +93,7 @@
   }
 
   .block_info__title {
-    text-align: left;
+    text-align: center;
     margin-top: 30px;
     font-size: 2rem;
     font-weight: 300;

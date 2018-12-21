@@ -30,12 +30,12 @@ router.get('/blocks/:id', async (req, res) => {
     const block = await Block.findOne(
       {
         where: {id},
-        attributes: {exclude: 'updatedAt'}
+        attributes: {exclude: ['createdAt', 'updatedAt']}
       })
 
-    const transactions = await Transaction.findAll({where: {blockId: id}})
-
     if (block) {
+      const transactions = await Transaction.findAll({where: {blockId: block.id}})
+
       res.json({
         block,
         transactions
