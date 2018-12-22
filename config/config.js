@@ -22,6 +22,7 @@ module.exports = {
     password: process.env.SEQUELIZE_PASSWORD,
     database: 'gruut_webserver',
     host: '127.0.0.1',
+    port: process.env.SE_PORT,
     dialect: 'mysql',
     operatorsAliases: false
   }

@@ -14,7 +14,7 @@
   "config": {
     "nuxt": {
       "host": "0.0.0.0",
-      "port": "3000"
+      "port": "49090"
     }
   },
   "dependencies": {
@@ -33,6 +33,7 @@
     "node-sass": "^4.10.0",
     "nodemon": "^1.18.9",
     "nuxt": "latest",
+    "pm2": "^3.2.4",
     "protobufjs": "^6.8.8",
     "sass-loader": "^7.1.0",
     "sequelize": "^4.41.0",
