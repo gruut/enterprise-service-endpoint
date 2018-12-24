@@ -56,7 +56,7 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), (req, res) => {
       (message) => {
         // TODO: header 검증
         const body = message.substr(HEADER_LENGTH)
-        return JSON.parse(body)
+        return JSON.parse(message)
       },
       async (jsonObj) => {
         const blockRawJson = jsonObj.blockraw
