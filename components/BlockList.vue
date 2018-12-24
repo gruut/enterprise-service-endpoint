@@ -5,7 +5,7 @@
         <div class="explorer_body__table_cell explorer_body__table_cell--header">Block ID</div>
         <div class="explorer_body__table_cell explorer_body__table_cell--header">Block Version</div>
         <div class="explorer_body__table_cell explorer_body__table_cell--header explorer_body__table_cell--time">Block 생성시간</div>
-        <div class="explorer_body__table_cell explorer_body__table_cell--header">Block height</div>
+        <div class="explorer_body__table_cell explorer_body__table_cell--header">Block Height</div>
       </div>
       <div v-for="(block, index) in blocks" :key="index" class="explorer_body__table_row">
         <nuxt-link :to="{ name: 'blocks-id', params: { id: block.id }}"
