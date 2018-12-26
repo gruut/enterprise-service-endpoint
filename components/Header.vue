@@ -6,7 +6,7 @@
           <img width="170" height="90" src="../assets/img/gruut_new_logo_white.png" alt="logo">
         </a>
         <a href="/transaction/new" class="explorer_header__generate_tx_link">
-          <span>
+          <span class="explorer_header__generate_tx_text">
             트랜잭션 생성
           </span>
         </a>
@@ -157,5 +157,9 @@
 
     cursor: pointer;
     transition: all 0.25s ease;
+  }
+
+  .explorer_header__generate_tx_text {
+    font-size: 1rem;
   }
 </style>
