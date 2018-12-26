@@ -27,7 +27,6 @@ const base64ToHex = function(base64Str) {
   return Buffer.from(base64Str, 'base64').toString('hex')
 }
 
-
 const self = module.exports = {
   protobuf_msg_serializer : protobuf_msg_serializer,
   getTimestamp : getTimestamp,

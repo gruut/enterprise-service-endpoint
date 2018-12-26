@@ -74,24 +74,24 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), (req, res) => {
         })
         await block.save()
 
+        let signers = []
         _.each(blockRawJson.SSig, async (signer) => {
-          const s = Signer.build({
+          signers.push({
             signerId: signer.sID,
             signerSignature: signer.sig,
             blockId: block.id
           })
-
-          await s.save()
         })
+        await Signer.bulkCreate(signers, {individualHooks: true})
 
+        let transactions = []
         _.each(blockRawJson.txids, async (txId) => {
-          const t = Transaction.build({
+          transactions.push({
             transactionId: txId,
             blockId: block.id
           })
-
-          await t.save()
         })
+        await Transaction.bulkCreate(transactions, {individualHooks: true})
       }
     )
     res.sendStatus(200)
