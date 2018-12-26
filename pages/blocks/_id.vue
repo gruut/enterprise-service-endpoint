@@ -36,7 +36,7 @@
 
       <div class="block_info__table_row">
         <div class="block_info__table_cell">생성시간</div>
-        <div class="block_info__table_cell">{{ block.time }}</div>
+        <div class="block_info__table_cell">{{ block.time | changeTimezone() }}</div>
       </div>
     </div>
 
@@ -56,6 +56,8 @@
 
 <script>
   import axios from '~/plugins/axios'
+  const moment = require('moment-timezone')
+
   export default {
     name: 'id',
     asyncData ({params, error}) {
@@ -72,6 +74,11 @@
           console.log(e)
           error({statusCode: 404, message: 'Block not found'})
         })
+    },
+    filters: {
+      changeTimezone: (time) => {
+        return moment.tz(time, 'Asia/Seoul').format('MMMM Do YYYY, h:mm:ss a')
+      }
     },
     head () {
       return {
