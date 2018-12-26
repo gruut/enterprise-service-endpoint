@@ -5,7 +5,7 @@
 <script>
   import axios from '~/plugins/axios'
   import BlockList from '~/components/BlockList.vue'
-  const moment = require('moment')
+  const moment = require('moment-timezone')
 
   export default {
     head () {
@@ -23,7 +23,7 @@
     async asyncData () {
       let {data} = await axios.get('/api/blocks')
       data.forEach(block => {
-        block.time = moment(block.time).format('MMMM Do YYYY, h:mm:ss a')
+        block.time = moment.tz(block.time, 'Asia/Seoul').format('MMMM Do YYYY, h:mm:ss a')
       })
       return {blocks: data}
     },
