@@ -38,6 +38,11 @@
         <div class="block_info__table_cell">생성시간</div>
         <div class="block_info__table_cell">{{ block.time | changeTimezone() }}</div>
       </div>
+
+      <div v-if="signers.length > 0" class="block_info__table_row">
+        <div class="block_info__table_cell">서명자 수</div>
+        <div class="block_info__table_cell">{{ signers.length }}</div>
+      </div>
     </div>
 
     <div v-if="transactions.length > 0">
@@ -67,7 +72,8 @@
 
           return {
             block: receivedData.block,
-            transactions: receivedData.transactions
+            transactions: receivedData.transactions,
+            signers: receivedData.signers
           }
         })
         .catch((e) => {

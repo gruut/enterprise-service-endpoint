@@ -35,10 +35,12 @@ router.get('/blocks/:id', async (req, res) => {
 
     if (block) {
       const transactions = await Transaction.findAll({where: {blockId: block.id}})
+      const signers = await Signer.findAll({where: {blockId: block.id}})
 
       res.json({
         block,
-        transactions
+        transactions,
+        signers
       })
     } else {
       res.sendStatus(400)
