@@ -1,3 +1,5 @@
+const { base64ToHex } = require('../plugins/my_utils')
+
 module.exports = (sequelize, DataTypes) => {
   const block = sequelize.define('Block', {
     id: {
@@ -37,6 +39,12 @@ module.exports = (sequelize, DataTypes) => {
     block.hasMany(models.Transaction)
     block.hasMany(models.Signer)
   }
+
+  block.beforeCreate((block) => {
+    block.blockId = base64ToHex(block.blockId)
+    block.txRoot = base64ToHex(block.txRoot)
+    block.mergerId = base64ToHex(block.mergerId)
+  })
 
   return block
 }
