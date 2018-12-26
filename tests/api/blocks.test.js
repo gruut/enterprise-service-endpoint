@@ -72,7 +72,17 @@ describe('GET blocks', function () {
         })
       })
       .end((err, res) => {
-        done()
+        Block.findAll({
+          order: [
+            ['time', 'DESC']
+          ]
+        }).then((blocks) => {
+          const block = blocks[0]
+          expect(block.id).to.be.greaterThan(0)
+          done()
+        }).catch(e => {
+          done(e)
+        })
       })
   })
 })
