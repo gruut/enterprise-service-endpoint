@@ -15,6 +15,14 @@ module.exports = {
       {rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Ubuntu'}
     ]
   },
+  modules: [
+    '@nuxtjs/vuetify'
+  ],
+
+  vuetify: {
+    // Vuetify options
+    //  theme: { }
+  },
   /*
   ** Global CSS
   */
@@ -23,7 +31,7 @@ module.exports = {
   ** Add axios globally
   */
   build: {
-    vendor: ['axios'],
+    vendor: ['axios', 'vuetify'],
     /*
     ** Run ESLINT on save
     */
