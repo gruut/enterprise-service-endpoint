@@ -1,5 +1,3 @@
-const { base64ToHex } = require('../plugins/my_utils')
-
 module.exports = (sequelize, DataTypes) => {
   const Transaction = sequelize.define('Transaction', {
     id: {
@@ -28,8 +26,5 @@ module.exports = (sequelize, DataTypes) => {
     Transaction.belongsTo(models.Block)
   }
 
-  Transaction.beforeCreate((tx) => {
-    tx.transactionId = base64ToHex(tx.transactionId)
-  })
   return Transaction
 }
