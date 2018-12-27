@@ -12,8 +12,14 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+  $break-small: 600px;
+
   .explorer__footer_copyright {
     color: #aaaaaa;
+
+    @media screen and (max-width: $break-small){
+      font-size: 0.6rem;
+    }
   }
 </style>
