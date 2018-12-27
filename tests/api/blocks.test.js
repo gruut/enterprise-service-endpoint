@@ -32,6 +32,28 @@ describe('GET blocks', function () {
     })
   })
 
+  it('should find and return blocks', (done) => {
+    Block.create({
+      version: 1,
+      blockId: 'xo2a8TIhzOYE1aUZMta7lGJSlCdgHoG9eyrldLbq6Nw=',
+      time: new Date(),
+      height: 1,
+      txRoot: 'dCc8MsxGDMpc1QEKmt/7EK8l8IcOe9owKwSwCenFvw4=',
+      mergerId: 'TUVSR0VSLTE=',
+      mergerSignature: '1'
+    }).then(() => {
+      chai.request(server)
+        .get('/blocks/?height=1')
+        .end((err, res) => {
+          expect(res.status).to.be.equal(200)
+          expect(res.body.length).to.be.greaterThan(0)
+          done()
+        })
+    }).catch(e => {
+      done(e)
+    })
+  })
+
   it('should return a specific block', (done) => {
     Block.create({
       version: 1,

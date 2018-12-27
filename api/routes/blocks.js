@@ -10,11 +10,24 @@ const HEADER_LENGTH = 32
 /* GET Blocks listing. */
 router.get('/blocks', async (req, res) => {
   try {
-    const blocks = await Block.findAll({
-      order: [
-        ['time', 'DESC']
-      ]
-    })
+    let blocks = null
+
+    if (_.isEmpty(req.query)) {
+      blocks = await Block.findAll({
+        order: [
+          ['time', 'DESC']
+        ]
+      })
+    } else {
+      const { height } = req.query
+      const block = await Block.findOne({
+        height
+      })
+
+      if (block) {
+        blocks = [block]
+      }
+    }
 
     res.json(blocks)
   } catch (err) {
