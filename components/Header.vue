@@ -31,6 +31,7 @@
 </template>
 
 <script>
+  import axios from '~/plugins/axios'
   require('vue2-autocomplete-js/dist/style/vue2-autocomplete.css')
 
   export default {
@@ -42,8 +43,16 @@
     },
     methods: {
       findBlock () {
-        console.log(this.blockHeight)
-        this.$router.push({name: 'blocks-id', params: {id: this.blockHeight}})
+        axios.get(`/api/blocks/?height=${this.blockHeight}`)
+          .then((res) => {
+            this.clearInput()
+            console.log(res)
+            if (res.status === 200) {
+              this.$router.push({name: 'blocks-id', params: {id: res.data[0].id}})
+            }
+          }).catch(e => {
+            console.log(e)
+          })
       },
       clearInput () {
         this.blockHeight = ''
