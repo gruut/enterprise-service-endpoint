@@ -6,7 +6,7 @@
     <div class="block_info__table">
       <div class="block_info__table_row">
         <div class="block_info__table_cell">블럭 ID</div>
-        <div class="block_info__table_cell">{{ block.blockId }}</div>
+        <div class="block_info__table_cell block_info__table_cell--truncate">{{ block.blockId }}</div>
       </div>
 
       <div class="block_info__table_row">
@@ -16,7 +16,7 @@
 
       <div class="block_info__table_row">
         <div class="block_info__table_cell">트랜잭션 루트</div>
-        <div class="block_info__table_cell">{{ block.txRoot }}</div>
+        <div class="block_info__table_cell block_info__table_cell--truncate">{{ block.txRoot }}</div>
       </div>
 
       <div class="block_info__table_row">
@@ -52,7 +52,7 @@
       <div class="block_info__table">
         <div v-for="transaction in transactions" class="block_info__table_row">
           <div class="block_info__table_cell">트랜잭션 ID</div>
-          <div class="block_info__table_cell">{{ transaction.transactionId }}</div>
+          <div class="block_info__table_cell block_info__table_cell--truncate">{{ transaction.transactionId }}</div>
         </div>
       </div>
     </div>
@@ -96,6 +96,7 @@
 
 <style lang="scss" scoped>
   $green: #00937B;
+  $break-small: 600px;
 
   .block_info {
     display: flex;
@@ -110,6 +111,10 @@
     margin-top: 30px;
     font-size: 2rem;
     font-weight: 300;
+
+    @media screen and (max-width: $break-small){
+      font-size: 1.6rem;
+    }
   }
 
   .block_info__table {
@@ -120,6 +125,11 @@
     padding-top: 2rem;
     font-family: "Ubuntu", sans-serif;
     font-size: 1.5rem;
+
+    @media screen and (max-width: $break-small){
+      width: 95%;
+      align-items: center;
+    }
   }
 
   .block_info__table_row {
@@ -127,6 +137,10 @@
     width: 100%;
     background-color: rgba(200, 200, 200, 0.05);
     padding: 1rem 2rem;
+
+    @media screen and (max-width: $break-small){
+      padding: 0.5rem 1rem;
+    }
   }
 
   .block_info__table_row:nth-child(odd) {
@@ -137,10 +151,20 @@
     flex-grow: 1;
     flex-basis: 100%;
     font-size: 1rem;
+
+    @media screen and (max-width: $break-small){
+      font-size: 0.6rem;
+    }
   }
 
   .block_info__table_cell:nth-child(even) {
     flex-grow: 1;
     text-align: center;
+  }
+
+  .block_info__table_cell--truncate {
+    @media screen and (max-width: $break-small){
+      font-size: 7px;
+    }
   }
 </style>

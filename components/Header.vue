@@ -2,8 +2,8 @@
   <section class="explorer_header">
     <div class="explorer_header__container">
       <nav class="explorer_header__nav">
-        <a href="/" class="explorer_header__logo_image">
-          <img width="170" height="90" src="../assets/img/gruut_new_logo_white.png" alt="logo">
+        <a href="/" class="explorer_header__logo_image_container">
+          <img class="explorer_header__logo_image" src="../assets/img/gruut_new_logo_white.png" alt="logo">
         </a>
         <a href="/transaction/new" class="explorer_header__generate_tx_link">
           <span class="explorer_header__generate_tx_text">
@@ -63,10 +63,15 @@
 
 <style lang="scss" scoped>
   $green: #00937B;
+  $break-small: 600px;
 
   .explorer_header {
     background-image: linear-gradient(90deg, #00937B 0%, #8BC541 100%);
     box-shadow: rgba(0, 0, 0, 0.5) 0 1px 3px 0;
+
+    @media screen and (max-width: $break-small){
+      padding: 30px 0;
+    }
   }
 
   .explorer_header__container {
@@ -75,6 +80,11 @@
     padding: 0 8rem;
     flex-direction: column;
     justify-content: center;
+
+    @media screen and (max-width: $break-small){
+      height: 2rem;
+      padding: 0;
+    }
   }
 
   .explorer_header__home_link {
@@ -96,6 +106,10 @@
     font-size: 2.5rem;
     font-family: "Source Sans Pro", sans-serif;
     font-weight: 600;
+
+    @media screen and (max-width: $break-small){
+      font-size: 1.5rem;
+    }
   }
 
   .explorer_header__container_search {
@@ -108,6 +122,11 @@
     align-items: center;
     box-shadow: rgba(0, 0, 0, 0.5) 0 1px 1px 0;
     border-radius: 0.5rem;
+
+    @media screen and (max-width: $break-small){
+      width: 70%;
+      height: 2rem;
+    }
   }
 
   .explorer_header__container_search_textarea {
@@ -118,6 +137,10 @@
     font-size: 1rem;
     padding: 0 1.4rem;
     font-family: "Source Sans Pro", sans-serif;
+
+    @media screen and (max-width: $break-small){
+      font-size: 0.6rem;
+    }
   }
 
   .explorer_header__container_search_button {
@@ -137,8 +160,20 @@
     font-size: 1.5rem;
   }
 
-  .explorer_header__logo_image {
+  .explorer_header__logo_image_container {
     display: flex;
+    width: 110px;
+    height: 110px;
+  }
+
+  .explorer_header__logo_image {
+    @media screen and (max-width: $break-small){
+      width: 65px;
+      height: 50px;
+
+      margin-top: 1rem;
+      margin-left: 1rem;
+    }
   }
 
   .explorer_header__nav {
@@ -166,6 +201,10 @@
 
     cursor: pointer;
     transition: all 0.25s ease;
+
+    @media screen and (max-width: $break-small){
+      display: none;
+    }
   }
 
   .explorer_header__generate_tx_text {

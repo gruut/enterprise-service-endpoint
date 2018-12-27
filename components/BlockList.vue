@@ -37,6 +37,7 @@
 
 <style lang="scss" scoped>
   $green: #00937B;
+  $break-small: 600px;
 
   .explorer_body {
     display: flex;
@@ -45,6 +46,10 @@
     background-color: #ffffff;
     min-height: 800px;
     padding-bottom: 2rem;
+
+    @media screen and (max-width: $break-small){
+      min-height: 300px;
+    }
   }
 
   .explorer_body__table {
@@ -81,6 +86,10 @@
     flex-grow: 1;
     flex-basis: 0;
     margin-right: 1rem;
+
+    @media screen and (max-width: $break-small){
+      font-size: 0.6rem;
+    }
   }
 
   .explorer_body__table_cell--link {
@@ -129,16 +138,32 @@
       //letter-spacing: 2px;
       letter-spacing: 2px;
     }
+
+    @media screen and (max-width: $break-small){
+      width: 100px;
+      height: 30px;
+      font-size: 0.8rem;
+    }
   }
 
   .explorer_body__table_cell--header {
     color: #ffffff;
     font-size: 1.2rem;
+
+    @media screen and (max-width: $break-small){
+      text-align: center;
+      font-size: 0.8rem;
+    }
   }
 
   .explorer_body__table_cell--time {
     font-size: 1rem;
     flex-grow: 3;
     flex-basis: 0;
+
+    @media screen and (max-width: $break-small){
+      font-size: 0.8rem;
+      text-align: center;
+    }
   }
 </style>
