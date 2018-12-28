@@ -1,9 +1,7 @@
 <template>
-  <footer>
-    <section class="explorer__footer">
-      <span class="explorer__footer_copyright">&copy 2018 Gruut Networks</span>
-    </section>
-  </footer>
+  <section class="explorer__footer">
+    <span class="explorer__footer_copyright">&copy 2018 Gruut Networks</span>
+  </section>
 </template>
 
 <script>
@@ -17,9 +15,5 @@
 
   .explorer__footer_copyright {
     color: #aaaaaa;
-
-    @media screen and (max-width: $break-small){
-      font-size: 0.6rem;
-    }
   }
 </style>

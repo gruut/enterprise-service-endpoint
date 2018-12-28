@@ -1,51 +1,32 @@
 <template>
-  <div>
+  <v-app>
     <my-header/>
-    <nuxt/>
-    <my-footer/>
-  </div>
+    <v-content class="content">
+      <my-parallax>
+      </my-parallax>
+      <v-container fluid>
+        <nuxt/>
+      </v-container>
+    </v-content>
+  </v-app>
 </template>
 
 <script>
   import Header from '~/components/Header.vue'
+  import MyParallax from '~/components/MyParallax.vue'
   import Footer from '~/components/Footer.vue'
 
   export default {
     components: {
       'my-header': Header,
+      'my-parallax': MyParallax,
       'my-footer': Footer
     }
   }
 </script>
 
-<style>
-  .container {
-    margin: 0;
-    width: 100%;
-    padding: 100px 0;
-    text-align: center;
-  }
-
-  .button, .button:visited {
-    display: inline-block;
-    color: black;
-    letter-spacing: 1px;
-    background-color: #fff;
-    border: 2px solid #000;
-    text-decoration: none;
-    text-transform: uppercase;
-    padding: 15px 45px;
-  }
-
-  .button:hover, .button:focus {
-    color: #fff;
-    background-color: #000;
-  }
-
-  .title {
-    color: #000;
-    font-weight: 300;
-    font-size: 2.5em;
-    margin: 0;
+<style scoped>
+  .content {
+    height: 500px;
   }
 </style>

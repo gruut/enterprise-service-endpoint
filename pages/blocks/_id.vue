@@ -151,7 +151,7 @@
     flex-grow: 1;
     flex-basis: 100%;
     font-size: 1rem;
-
+    padding: 8px;
     @media screen and (max-width: $break-small){
       font-size: 0.6rem;
     }
@@ -164,7 +164,7 @@
 
   .block_info__table_cell--truncate {
     @media screen and (max-width: $break-small){
-      font-size: 7px;
+      font-size: 5px;
     }
   }
 </style>

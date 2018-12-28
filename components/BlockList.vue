@@ -1,26 +1,52 @@
 <template>
-  <section class="explorer_body">
-    <div class="explorer_body__table">
-      <div class="explorer_body__table_row">
-        <div class="explorer_body__table_cell explorer_body__table_cell--header">Block ID</div>
-        <div class="explorer_body__table_cell explorer_body__table_cell--header">Block Version</div>
-        <div class="explorer_body__table_cell explorer_body__table_cell--header explorer_body__table_cell--time">Block 생성시간</div>
-        <div class="explorer_body__table_cell explorer_body__table_cell--header">Block Height</div>
-      </div>
-      <div v-for="(block, index) in blocks" :key="index" class="explorer_body__table_row">
-        <nuxt-link :to="{ name: 'blocks-id', params: { id: block.id }}"
-                   class="explorer_body__table_cell explorer_body__table_cell--link">
-          {{ block.blockId | truncate(10) }}
-        </nuxt-link>
-        <div class="explorer_body__table_cell">{{ block.version }}</div>
-        <div class="explorer_body__table_cell explorer_body__table_cell--time">{{ block.time }}</div>
-        <div class="explorer_body__table_cell">{{ block.height }}</div>
-      </div>
-    </div>
-    <nuxt-link v-if="show_more" to="/blocks" class="explorer_body__blocks_index">
-      <button v-if="blocks.length > 0" type="button" class="explorer_body__blocks_button">더보기</button>
-    </nuxt-link>
-  </section>
+  <v-card class="explorer_body">
+    <v-card-title class="explorer_body__table_title">
+      <span class="explorer_body__table_title_text">BlockChain Explorer</span>
+      <v-text-field
+        class="explorer_body__table_search"
+        v-model="search"
+        append-icon="search"
+        label="Search"
+        single-line
+        hide-details
+      ></v-text-field>
+    </v-card-title>
+    <v-data-table
+      :headers="headers"
+      :items="blocks"
+      :search="search"
+      :rows-per-page-items="rowsPerPageItems"
+      class="elevation-1 explorer_body__table"
+    >
+      <template
+        slot="headerCell"
+        slot-scope="{ header }"
+      >
+        <span class="subheading font-weight-bold explorer_body__table_cell--header" v-text="header.text"></span>
+      </template>
+      <template slot="items" slot-scope="{ item }">
+        <td class="text-xs-center">
+          <nuxt-link :to="{ name: 'blocks-id', params: { id: item.id }}"
+                     class="explorer_body__table_cell explorer_body__table_cell--link">
+            {{ item.blockId }}
+          </nuxt-link>
+
+        </td>
+        <td class="text-xs-center">{{ item.version }}</td>
+        <td class="text-xs-center">{{ item.time }}</td>
+        <td class="text-xs-center">{{ item.height }}</td>
+      </template>
+      <v-alert slot="no-results" :value="true" color="error" icon="error">
+        Your search for "{{ search }}" found no results.
+      </v-alert>
+
+      <template slot="no-data">
+        <v-alert :value="true" color="error" icon="warning">
+          Sorry, nothing to display here
+        </v-alert>
+      </template>
+    </v-data-table>
+  </v-card>
 </template>
 
 <script>
@@ -30,6 +56,38 @@
     filters: {
       truncate: (value, size, suffix = '...') => {
         return value.substring(0, size) + suffix
+      }
+    },
+    data () {
+      return {
+        search: '',
+        rowsPerPageItems: [10, 20, 30, 40],
+        headers: [
+          {
+            text: 'Block ID',
+            align: 'center',
+            sortable: false,
+            value: 'blockId'
+          },
+          {
+            text: 'Block Version',
+            sortable: false,
+            align: 'center',
+            value: 'version'
+          },
+          {
+            text: 'Block 생성시간',
+            sortable: true,
+            align: 'center',
+            value: 'createdAt'
+          },
+          {
+            text: 'Block Height',
+            sortable: true,
+            align: 'center',
+            value: 'height'
+          }
+        ]
       }
     }
   }
@@ -43,23 +101,21 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: #ffffff;
-    min-height: 800px;
-    padding-bottom: 2rem;
+    align-items: center;
 
-    @media screen and (max-width: $break-small){
-      min-height: 300px;
-    }
+    background-color: #ffffff;
+    padding-bottom: 2rem;
   }
 
   .explorer_body__table {
+    width: 90%;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-top: 2rem;
+
     font-family: "Ubuntu", sans-serif;
-    font-size: 1.5rem;
   }
 
   .explorer_body__table_row {
@@ -80,14 +136,7 @@
   }
 
   .explorer_body__table_cell {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-grow: 1;
-    flex-basis: 0;
-    margin-right: 1rem;
-
-    @media screen and (max-width: $break-small){
+    @media screen and (max-width: $break-small) {
       font-size: 0.6rem;
     }
   }
@@ -130,16 +179,18 @@
     }
     cursor: pointer;
     transition: all 0.25s ease;
+
     &:hover {
       color: white;
       background: $green;
     }
+
     &:active {
       //letter-spacing: 2px;
       letter-spacing: 2px;
     }
 
-    @media screen and (max-width: $break-small){
+    @media screen and (max-width: $break-small) {
       width: 100px;
       height: 30px;
       font-size: 0.8rem;
@@ -147,11 +198,9 @@
   }
 
   .explorer_body__table_cell--header {
-    color: #ffffff;
     font-size: 1.2rem;
 
-    @media screen and (max-width: $break-small){
-      text-align: center;
+    @media screen and (max-width: $break-small) {
       font-size: 0.8rem;
     }
   }
@@ -161,9 +210,33 @@
     flex-grow: 3;
     flex-basis: 0;
 
-    @media screen and (max-width: $break-small){
+    @media screen and (max-width: $break-small) {
       font-size: 0.8rem;
       text-align: center;
     }
+  }
+
+  .explorer_body__table_title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    width: 85%;
+  }
+
+  .explorer_body__table_title_text {
+    color: $green;
+    font-size: 1.7rem;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 600;
+
+    @media screen and (max-width: $break-small){
+      font-size: 1.5rem;
+    }
+  }
+
+  .explorer_body__table_search {
+    color: $green;
+    flex-grow: 0.3;
   }
 </style>
