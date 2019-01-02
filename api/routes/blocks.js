@@ -5,13 +5,10 @@ const debug = require('debug')('app:demo')
 const router = Router()
 const _ = require('../../plugins/partial')
 
-const HEADER_LENGTH = 32
-
 /* GET Blocks listing. */
 router.get('/blocks', async (req, res) => {
   try {
     let blocks = null
-
     if (_.isEmpty(req.query)) {
       blocks = await Block.findAll({
         order: [
@@ -70,11 +67,13 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), (req, res) => {
     _.go(req.body['message'],
       (message) => {
         // TODO: header 검증
-        const body = message.substr(HEADER_LENGTH)
-        return JSON.parse(message)
+        // return JSON.parse(message)
+        return req.body
       },
       async (jsonObj) => {
-        const blockRawJson = jsonObj.blockraw
+        const blockRawJson = jsonObj
+        // const blockRawJson = jsonObj.blockraw
+
         // TODO: mergerSig는 temp값(루이지 테스트)
         const block = Block.build({
           version: blockRawJson.ver,

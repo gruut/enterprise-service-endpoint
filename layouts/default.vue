@@ -28,5 +28,6 @@
 <style scoped>
   .content {
     height: 500px;
+    background: white;
   }
 </style>

@@ -31,7 +31,6 @@ describe('GET blocks', function () {
       done(e)
     })
   })
-})
 
   it('should find and return blocks', (done) => {
     Block.create({
