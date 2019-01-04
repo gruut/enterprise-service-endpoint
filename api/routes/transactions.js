@@ -1,5 +1,4 @@
 const {Router} = require('express')
-const uuidv4 = require('uuid/v4')
 const crypto = require('crypto')
 const multer = require('multer')
 // 25MB

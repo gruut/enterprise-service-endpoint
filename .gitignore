@@ -16,3 +16,5 @@ build
 .idea
 
 .env
+/SE_sk.pem
+/SE_csr.pem
