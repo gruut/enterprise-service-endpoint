@@ -64,19 +64,17 @@ class TxGenerator {
     this.client = new ProtoTransaction.GruutSeService(remoteServerAddr, grpc.credentials.createInsecure())
   }
 
-  async sendTransaction (content) {
+  sendTransaction (content) {
     try {
       const result = _.go(content,
         this.generateTransaction,
         (tx) => {
-          console.log(tx)
           return utils.pack(MSG_TX, tx, tx.rID)
         },
         (packedTx) => {
           return utils.protobuf_msg_serializer(TX_PROTO_PATH, 'grpc_se.GrpcMsgTX', packedTx)
         },
         (msg) => {
-          // TODO: Proto에서 nothing 리턴. 요청에 대한 결과를 리턴해야 함
           this.client.transaction(msg, res => {
             // TODO: logger
             console.log(`I got this msg: ${res}`)
