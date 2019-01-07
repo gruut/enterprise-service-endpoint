@@ -64,11 +64,12 @@ class TxGenerator {
     this.client = new ProtoTransaction.GruutSeService(remoteServerAddr, grpc.credentials.createInsecure())
   }
 
-  sendTransaction (content) {
+  async sendTransaction (content) {
     try {
       const result = _.go(content,
         this.generateTransaction,
         (tx) => {
+          console.log(tx)
           return utils.pack(MSG_TX, tx, tx.rID)
         },
         (packedTx) => {
@@ -92,7 +93,7 @@ class TxGenerator {
     }
   }
 
-  generateTransaction (content) {
+  async generateTransaction (content) {
     let transaction = {}
 
     transaction.txid = hash(crypto.randomBytes(TRANSACTION_ID_SIZE), 'base64')
@@ -101,7 +102,7 @@ class TxGenerator {
     transaction.type = 'DIGESTS'
     transaction.content = Object.values(content)
 
-    transaction.rSig = sign(transaction)
+    transaction.rSig = await sign(transaction)
 
     return transaction
   }
