@@ -92,7 +92,7 @@ class TxGenerator {
     }
   }
 
-  generateTransaction (content) {
+  async generateTransaction (content) {
     let transaction = {}
 
     transaction.txid = hash(crypto.randomBytes(TRANSACTION_ID_SIZE), 'base64')
@@ -101,7 +101,7 @@ class TxGenerator {
     transaction.type = 'DIGESTS'
     transaction.content = Object.values(content)
 
-    transaction.rSig = sign(transaction)
+    transaction.rSig = await sign(transaction)
 
     return transaction
   }
