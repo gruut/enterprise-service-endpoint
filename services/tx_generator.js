@@ -4,6 +4,7 @@ const crypto = require('crypto')
 const utils = require('../plugins/my_utils')
 const _ = require('../plugins/partial')
 const Path = require('path')
+const { Key } = require('../models')
 
 const MSG_TX = 0xB1
 const TRANSACTION_ID_SIZE = 32
@@ -27,7 +28,7 @@ function hash (data, encoding = 'hex', len) {
   return value
 }
 
-function sign (transaction) {
+async function sign (transaction) {
   let bufferList = []
 
   bufferList.push(Buffer.from(transaction.txid, 'base64'))
@@ -45,10 +46,13 @@ function sign (transaction) {
   })
   const sigBuffer = Buffer.concat(bufferList)
 
-  const privateKey = process.env.PRIVATE_KEY
+  const key = await Key.findOne({
+    attributes: ['privateKeyPem']
+  })
+
   const signer = crypto.createSign('sha256')
   signer.update(sigBuffer)
-  return signer.sign(privateKey, 'base64')
+  return signer.sign(key.privateKeyPem, 'base64')
 }
 
 class TxGenerator {

@@ -36,12 +36,11 @@ class Cert {
         }
       ).then((res) => {
         if (res.status === 200) {
-          key = Key.create({
+          Key.create({
             name: process.env.MY_ID,
             certificatePem: res.data.pem,
             privateKeyPem: KeyUtils.KEYUTIL.getPEM(ecKeypair.prvKeyObj, 'PKCS8PRV')
           })
-          process.env.PRIVATE_KEY = key.privateKeyPem
         }
       }).catch((err) => {
         // TODO: log
@@ -49,8 +48,6 @@ class Cert {
         throw err
       })
     }
-
-    process.env.PRIVATE_KEY = key.privateKeyPem
   }
 }
 
