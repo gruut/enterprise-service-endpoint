@@ -77,8 +77,13 @@ class TxGenerator {
         (msg) => {
           this.client.transaction(msg, (err, res) => {
             // TODO: logger
-            console.log(`I got this msg: ${res.message}`)
+            if (err) {
+              console.error(`Response from Merger: ${err}`)
+            } else {
+              console.log(`Response from Merger: ${res.message}`)
+            }
           })
+
           return true
         }
       )

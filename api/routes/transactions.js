@@ -9,7 +9,6 @@ const debug = require('debug')('app:demo')
 /* POST create a transaction */
 router.post('/transactions', bodyParser.urlencoded({extended: false}), async (req, res) => {
   try {
-    console.log(req)
     const content = req.body.message
     let requestData = RequestData.build({
       requester_id: process.env.MY_ID,

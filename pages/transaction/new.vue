@@ -85,6 +85,8 @@
         ).then((res) => {
           if (res.status === 200) {
             alert('요청이 처리되었습니다.')
+          } else {
+            alert('요청이 처리되지 못했습니다.')
           }
         }).catch((err) => {
           console.log(err)
