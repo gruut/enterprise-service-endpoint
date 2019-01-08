@@ -27,7 +27,15 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      mergerSignature: {
+      chainId: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      prevBlockHash: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      prevBlockId: {
         allowNull: false,
         type: Sequelize.STRING
       },

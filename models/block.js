@@ -7,25 +7,38 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false
     },
     version: {
+      allowNull: false,
       type: DataTypes.INTEGER
     },
     blockId: {
+      allowNull: false,
       type: DataTypes.STRING
     },
     time: {
+      allowNull: false,
       type: DataTypes.DATE
     },
     height: {
+      allowNull: false,
       type: DataTypes.INTEGER
     },
     txRoot: {
+      allowNull: false,
       type: DataTypes.STRING
     },
     mergerId: {
       allowNull: false,
       type: DataTypes.STRING
     },
-    mergerSignature: {
+    chainId: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    prevBlockHash: {
+      allowNull: false,
+      type: DataTypes.STRING
+    },
+    prevBlockId: {
       allowNull: false,
       type: DataTypes.STRING
     }
