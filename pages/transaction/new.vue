@@ -1,6 +1,6 @@
 <template>
   <div class="form_container">
-    <form class="form_container__form" v-on:submit.prevent>
+    <form v-if="!transactionSent" class="form_container__form" v-on:submit.prevent>
       <div class="form_container__input_field">
         <v-text-field
                 v-model="name"
@@ -40,6 +40,36 @@
         </v-btn>
       </div>
     </form>
+    <div v-if="transactionSent">
+      <v-layout row>
+        <v-flex xs12 sm6 offset-sm3>
+          <v-card class="form_container__progress_card">
+            <v-card-title primary-title>
+              <div>
+                <div class="headline">{{ cardTitle }}</div>
+                <span v-if="!receivedBlock" class="left grey--text">12초 정도 소요됩니다.</span>
+              </div>
+            </v-card-title>
+            <div class="form_container__progress_circular">
+              <v-progress-linear
+                      v-model="progressIndicator"
+                      :indeterminate="query"
+                      color="#00937B"
+                      :width="1"
+              >
+              </v-progress-linear>
+            </div>
+        
+            <v-slide-y-transition>
+              <v-card-text v-show="receivedBlock">
+                <v-btn flat>Share</v-btn>
+                <v-btn flat color="purple">Explore</v-btn>
+              </v-card-text>
+            </v-slide-y-transition>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </div>
   </div>
 </template>
 
@@ -61,7 +91,13 @@
     data () {
       return {
         name: '',
-        message: ''
+        message: '',
+        progressIndicator: 0,
+        transactionSent: false,
+        interval: 0,
+        receivedBlock: false,
+        query: false,
+        cardTitle: 'Block 생성 대기중입니다.'
       }
     },
     methods: {
@@ -85,12 +121,31 @@
         ).then((res) => {
           if (res.status === 200) {
             alert('요청이 처리되었습니다.')
+            this.transactionSent = true
+            this.queryAndIndeterminate()
           } else {
             alert('요청이 처리되지 못했습니다.')
           }
         }).catch((err) => {
           console.log(err)
         })
+      },
+      queryAndIndeterminate: function () {
+        this.query = true
+        this.progressIndicator = 0
+
+        setTimeout(() => {
+          this.interval = setInterval(() => {
+            if (this.progressIndicator === 100) {
+              clearInterval(this.interval)
+              this.receivedBlock = true
+              this.cardTitle = 'Block이 생성되었습니다.'
+              return
+            }
+            this.progressIndicator += 10
+          }, 1000)
+          this.query = false
+        }, 2000)
       }
     },
     computed: {
@@ -146,5 +201,14 @@
     font-size: 1.5rem;
     color: #fff;
     font-weight: bold;
+  }
+
+  .form_container__progress_circular {
+    width: 97%;
+    margin: 0 auto;
+  }
+
+  .form_container__progress_card {
+    height: 200px;
   }
 </style>
