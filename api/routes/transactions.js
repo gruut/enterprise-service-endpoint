@@ -1,32 +1,68 @@
 const {Router} = require('express')
 const crypto = require('crypto')
 const bodyParser = require('body-parser')
-const {RequestData} = require('../../models')
+const {RequestData, Transaction} = require('../../models')
 const TxGenerator = require('../../services/tx_generator')
 const router = Router()
 const debug = require('debug')('app:demo')
+const _ = require('partial-js')
+
+router.get('/transactions', async (req, res) => {
+  try {
+    let transactions = null
+    console.log(req.query)
+    if (_.isEmpty(req.query)) {
+      transactions = await Transaction.findAll({
+        order: [
+          ['createdAt', 'DESC']
+        ]
+      })
+    } else {
+      const { transactionId } = req.query
+      const transaction = await Transaction.findOne({
+        where: {
+          transactionId
+        }
+      })
+
+      if (transaction) {
+        transactions = [transaction]
+      }
+    }
+
+    res.json(transactions)
+  } catch (e) {
+    res.sendStatus(500)
+    throw e
+  }
+})
 
 /* POST create a transaction */
 router.post('/transactions', bodyParser.urlencoded({extended: false}), async (req, res) => {
   try {
     const content = req.body.message
     let requestData = RequestData.build({
-      requester_id: process.env.MY_ID,
+      requesterId: process.env.MY_ID,
       data: content,
       signed: false
     })
-    // TODO: 요청이 성공했을때만 저장하도록 수정
     await requestData.save()
 
     const dataObj = {
-      'rID': requestData.requester_id.toString(),
+      'rID': requestData.requesterId.toString(),
       'data_id': requestData.id.toString(),
       'digest': crypto.createHash('sha256').update(content).digest('base64')
     }
 
     const txGenerator = new TxGenerator()
-    if (txGenerator.sendTransaction(dataObj)) {
-      res.sendStatus(200)
+    const sentResult = await txGenerator.sendTransaction(dataObj)
+    if (sentResult) {
+      requestData.transactionId = txGenerator.transactionId
+      await requestData.save()
+
+      res.json({
+        transactionId: requestData.transactionId
+      })
     } else {
       res.sendStatus(500)
     }

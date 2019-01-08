@@ -7,7 +7,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      requester_id: {
+      requesterId: {
         allowNull: false,
         type: Sequelize.UUID
       },
@@ -15,10 +15,13 @@ module.exports = {
         allowNull: false,
         type: Sequelize.BLOB('long')
       },
-      signed: {
+      processed: {
         allowNull: false,
         type: Sequelize.BOOLEAN,
         defaultValue: false
+      },
+      transactionId: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

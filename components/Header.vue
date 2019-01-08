@@ -25,7 +25,6 @@
         axios.get(`/api/blocks/?height=${this.blockHeight}`)
           .then((res) => {
             this.clearInput()
-            console.log(res)
             if (res.status === 200) {
               this.$router.push({name: 'blocks-id', params: {id: res.data[0].id}})
             }

@@ -61,13 +61,16 @@ class TxGenerator {
     const ProtoTransaction = grpc.loadPackageDefinition(packageDefinition).grpc_se
 
     const remoteServerAddr = `${process.env.MERGER_ADDRESS}:${process.env.MERGER_PORT}`
+    this.transactionId = ''
     this.client = new ProtoTransaction.GruutSeService(remoteServerAddr, grpc.credentials.createInsecure())
   }
 
-  sendTransaction (content) {
+  async sendTransaction (content) {
     try {
-      const result = _.go(content,
-        this.generateTransaction,
+      const transaction = await this.generateTransaction(content)
+      this.transactionId = transaction.txid
+
+      const result = _.go(transaction,
         (tx) => {
           return utils.pack(MSG_TX, tx, tx.rID)
         },

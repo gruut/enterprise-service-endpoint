@@ -64,7 +64,6 @@ router.get('/blocks/:id', async (req, res) => {
 /* POST handle MSG_HEADER */
 router.post('/blocks', bodyParser.urlencoded({extended: false}), (req, res) => {
   try {
-    console.log(req)
     _.go(req.body['message'],
       (message) => {
         return JSON.parse(message).blockraw

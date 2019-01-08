@@ -62,8 +62,7 @@
         
             <v-slide-y-transition>
               <v-card-text v-show="receivedBlock">
-                <v-btn flat>Share</v-btn>
-                <v-btn flat color="purple">Explore</v-btn>
+                <v-btn flat color="#00937B">생성된 블럭 보기</v-btn>
               </v-card-text>
             </v-slide-y-transition>
           </v-card>
@@ -94,10 +93,12 @@
         message: '',
         progressIndicator: 0,
         transactionSent: false,
-        interval: 0,
+        progressChecker: 0,
+        msgHeaderChecker: 0,
         receivedBlock: false,
         query: false,
-        cardTitle: 'Block 생성 대기중입니다.'
+        cardTitle: 'Block 생성 대기중입니다.',
+        requestTransactionId: ''
       }
     },
     methods: {
@@ -123,10 +124,13 @@
             alert('요청이 처리되었습니다.')
             this.transactionSent = true
             this.queryAndIndeterminate()
+
+            this.requestTransactionId = res.data.transactionId
           } else {
             alert('요청이 처리되지 못했습니다.')
           }
         }).catch((err) => {
+          alert('요청이 처리되지 못했습니다.')
           console.log(err)
         })
       },
@@ -135,13 +139,32 @@
         this.progressIndicator = 0
 
         setTimeout(() => {
-          this.interval = setInterval(() => {
+          if (this.requestTransactionId.length > 0) {
+            this.msgHeaderChecker = setInterval(() => {
+              axios.get(`/api/transactions/?transactionId=${this.requestTransactionId}`)
+                .then((res) => {
+                  if (res.status === 200) {
+                    this.progressIndicator = 100
+                    this.receivedBlock = true
+                    this.cardTitle = 'Block이 생성되었습니다.'
+                  }
+                }).catch(e => {
+                  console.log(e)
+                })
+            }, 2000)
+          }
+
+          this.progressChecker = setInterval(() => {
             if (this.progressIndicator === 100) {
-              clearInterval(this.interval)
-              this.receivedBlock = true
-              this.cardTitle = 'Block이 생성되었습니다.'
+              clearInterval(this.progressChecker)
+              clearInterval(this.msgHeaderChecker)
+              if (!this.receivedBlock) {
+                this.cardTitle = 'Block이 생성되지 않았습니다.'
+              }
+
               return
             }
+
             this.progressIndicator += 10
           }, 1000)
           this.query = false
@@ -163,6 +186,10 @@
         !this.$v.message.required && errors.push('메세지를 입력해주세요!')
         return errors
       }
+    },
+    beforeDestroy () {
+      clearInterval(this.progressChecker)
+      clearInterval(this.msgHeaderChecker)
     }
   }
 </script>
