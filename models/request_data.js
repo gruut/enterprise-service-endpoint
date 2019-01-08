@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       type: DataTypes.INTEGER
     },
-    requester_id: {
+    requesterId: {
       allowNull: false,
       type: DataTypes.UUID
     },
@@ -14,10 +14,13 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       type: DataTypes.BLOB('long')
     },
-    signed: {
+    processed: {
       allowNull: false,
       type: DataTypes.BOOLEAN,
       defaultValue: false
+    },
+    transactionId: {
+      type: DataTypes.STRING
     }
   }, {
     timestamp: true
