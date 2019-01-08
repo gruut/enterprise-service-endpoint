@@ -101,7 +101,7 @@
         ]
       }
     },
-    async created () {
+    async mounted () {
       this.blocks = await this.fetchBlocks()
       this.timer = setInterval(this.checkNewBlock, 5000)
     },
@@ -136,12 +136,11 @@
             })
           }
         )
-      },
-      cancelAutoUpdate: function () { clearInterval(this.timer) }
+      }
     },
 
     beforeDestroy () {
-      this.cancelAutoUpdate()
+      clearInterval(this.timer)
     }
   }
 </script>

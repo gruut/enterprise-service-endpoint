@@ -18,7 +18,7 @@ router.get('/blocks', async (req, res) => {
     } else {
       const { height } = req.query
       const block = await Block.findOne({
-        height
+        where: {height}
       })
 
       if (block) {
