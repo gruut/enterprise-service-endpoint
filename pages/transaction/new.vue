@@ -1,26 +1,43 @@
 <template>
   <div class="form_container">
-    <form class="form_container__form" v-on:submit.prevent="sendTransaction">
+    <form class="form_container__form" v-on:submit.prevent>
       <div class="form_container__input_field">
-        <label class="form_container__form_label" for="name">이름</label>
-        <input type="text" name="name" id="name" class="form_container__form_input" v-model="name" required>
+        <v-text-field
+                v-model="name"
+                :error-messages="nameErrors"
+                :counter="10"
+                label="닉네임"
+                color="#00937B"
+                required
+                @input="$v.name.$touch"
+                @blur="$v.name.$touch"
+        ></v-text-field>
       </div>
       <div class="form_container__input_field">
-        <div>
-          <label class="form_container__form_label" for="email">이메일</label>
-          <span class="form_container__error_message" v-show="!email.valid">유효한 이메일 주소를 입력해주세요.</span>
-        </div>
-        <input type="text" name="email" id="email" class="form_container__form_input" v-model="email.value" required>
+        <v-textarea
+                v-model="message"
+                id="form_container__input_field_textarea"
+                outline
+                :error-messages="messageErrors"
+                rows="10"
+                counter="100"
+                label="메세지를 입력해주세요."
+                color="#00937B"
+                required
+                @input="$v.message.$touch"
+                @blur="$v.message.$touch"
+        ></v-textarea>
       </div>
-      <div class="form_container__input_field">
-        <label class="form_container__form_label" for="file">파일 업로드</label>
-        <input type="file" name="file" id="file" class="form_container__form_input"
-               accept=".jpg, .jpeg, .png, .pdf" required>
-      </div>
-      <div class="form_container__button_container">
-        <button type="submit" class="form_container__submit_button">
-          제출
-        </button>
+      <div>
+        <v-btn
+                type="submit"
+                color="#00937B"
+                block
+                large
+                @click="sendTransaction"
+        >
+          <span class="form_container__submit_button_text">메세지 전송</span>
+        </v-btn>
       </div>
     </form>
   </div>
@@ -28,55 +45,66 @@
 
 <script>
   import axios from '~/plugins/axios'
+  import {validationMixin} from 'vuelidate'
+  import {required, maxLength} from 'vuelidate/lib/validators'
+
+  const queryString = require('querystring')
 
   export default {
+    mixins: [validationMixin],
+
+    validations: {
+      name: {required, maxLength: maxLength(10)},
+      message: {required, maxLength: maxLength(100)}
+    },
     name: 'new',
     data () {
       return {
         name: '',
-        email: {
-          value: '',
-          valid: true
-        }
+        message: ''
       }
     },
     methods: {
-      isEmail: function (address) {
-        // Regular expression from W3C HTML5.2 input specification:
-        // https://www.w3.org/TR/html/sec-forms.html#email-state-typeemail
-        // eslint-disable-next-line no-useless-escape
-        const emailRegExp = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
-
-        return emailRegExp.test(address)
-      },
       sendTransaction: function () {
-        const fileElem = document.getElementById('file')
-        const fileReader = new FileReader()
-
-        fileReader.readAsBinaryString(fileElem.files[0])
-        fileReader.onload = async () => {
-          let formData = new FormData()
-          formData.append('file', fileReader.result)
-          axios.post('/api/transactions',
-            formData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-            }
-          ).then((res) => {
-            if (res.status === 200) {
-              alert('요청이 처리되었습니다.')
-            }
-          }).catch((err) => {
-            console.log(err)
-          })
+        this.$v.$touch()
+        if (this.nameErrors.length > 0) {
+          return
         }
+        if (this.messageErrors.length > 0) {
+          return
+        }
+
+        const textareaElem = document.getElementById('form_container__input_field_textarea')
+        axios.defaults.headers = {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        axios.post('/api/transactions',
+          queryString.stringify({
+            message: textareaElem.value
+          })
+        ).then((res) => {
+          if (res.status === 200) {
+            alert('요청이 처리되었습니다.')
+          }
+        }).catch((err) => {
+          console.log(err)
+        })
       }
     },
-    watch: {
-      'email.value': function (input) {
-        this.email.valid = this.isEmail(input)
+    computed: {
+      nameErrors () {
+        const errors = []
+        if (!this.$v.name.$dirty) return errors
+        !this.$v.name.maxLength && errors.push('닉네임은 반드시 10자 이하여야 합니다')
+        !this.$v.name.required && errors.push('닉네임을 입력해주세요!')
+        return errors
+      },
+      messageErrors () {
+        const errors = []
+        if (!this.$v.message.$dirty) return errors
+        !this.$v.message.maxLength && errors.push('메세지는 반드시 100자 이하여야 합니다')
+        !this.$v.message.required && errors.push('메세지를 입력해주세요!')
+        return errors
       }
     }
   }
@@ -84,16 +112,16 @@
 
 <style lang="scss" scoped>
   $green: #00937B;
-
+  
   .form_container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      background-color: #ffffff;
-      min-height: 500px;
-      padding-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #ffffff;
+    min-height: 500px;
+    padding-bottom: 2rem;
   }
-
+  
   .form_container__form {
     font-size: 16px;
     width: 40%;
@@ -103,77 +131,18 @@
     background-color: #fff;
     box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.3);
   }
-
+  
   .form_container__input_field {
     display: flex;
     flex-direction: column;
     justify-content: center;
-
+    
     margin: 1.5rem 0 1.5rem 0;
   }
 
-  .form_container__form_label {
-    display: inline-block;
-    font-size: 1.3rem;
-    font-family: "Apple SD Gothic Neo",sans-serif;
-    color: #7f828b;
-
-    margin-right: 5px;
-    margin-bottom: 5px;
-  }
-
-  .form_container__error_message {
-    display: inline-block;
-    font-family: "Apple SD Gothic Neo",sans-serif;
-    color: #ff5555;
-  }
-
-  .form_container__form_input {
-    padding: 12px;
-    border: 1px solid #cfd9db;
-    background-color: #ffffff;
-    border-radius: 0.25em;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.08);
-  }
-
-  .form_container__button_container {
-    display: block;
-    text-decoration: none;
-    margin-top: 2rem;
-    text-align: center;
-  }
-
-  .form_container__button_container:hover {
-    background-color: $green;
-    color: #ffffff;
-    cursor: pointer;
-  }
-
-  .form_container__submit_button {
-    outline: none;
-    width: 100%;
-    height: 40px;
-    text-align: center;
-    background: #fff;
-    border: 2px solid $green;
-    color: $green;
-    letter-spacing: 1px;
-    text-shadow: none;
-    font: {
-      size: 1rem;
-      weight: bold;
-    }
-    cursor: pointer;
-    transition: all 0.25s ease;
-
-    &:hover {
-      color: white;
-      background: $green;
-    }
-
-    &:active {
-      //letter-spacing: 2px;
-      letter-spacing: 2px;
-    }
+  .form_container__submit_button_text {
+    font-size: 1.5rem;
+    color: #fff;
+    font-weight: bold;
   }
 </style>

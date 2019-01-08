@@ -1,19 +1,16 @@
 const {Router} = require('express')
 const crypto = require('crypto')
-const multer = require('multer')
-// 25MB
-const upload = multer({
-  limits: { fieldSize: 25 * 1024 * 1024 }
-})
+const bodyParser = require('body-parser')
 const {RequestData} = require('../../models')
 const TxGenerator = require('../../services/tx_generator')
 const router = Router()
 const debug = require('debug')('app:demo')
 
 /* POST create a transaction */
-router.post('/transactions', upload.any(), async (req, res) => {
+router.post('/transactions', bodyParser.urlencoded({extended: false}), async (req, res) => {
   try {
-    const content = req.body.file
+    console.log(req)
+    const content = req.body.message
     let requestData = RequestData.build({
       requester_id: process.env.MY_ID,
       data: content,

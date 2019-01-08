@@ -75,9 +75,9 @@ class TxGenerator {
           return utils.protobuf_msg_serializer(TX_PROTO_PATH, 'grpc_se.GrpcMsgTX', packedTx)
         },
         (msg) => {
-          this.client.transaction(msg, (res) => {
+          this.client.transaction(msg, (err, res) => {
             // TODO: logger
-            console.log(`I got this msg: ${res}`)
+            console.log(`I got this msg: ${res.message}`)
           })
           return true
         }
