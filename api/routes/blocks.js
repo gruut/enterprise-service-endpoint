@@ -64,17 +64,14 @@ router.get('/blocks/:id', async (req, res) => {
 /* POST handle MSG_HEADER */
 router.post('/blocks', bodyParser.urlencoded({extended: false}), (req, res) => {
   try {
+    console.log(req)
     _.go(req.body['message'],
       (message) => {
-        // TODO: header 검증
-        // return JSON.parse(message)
-        return req.body
+        return JSON.parse(message).blockraw
       },
       async (jsonObj) => {
         const blockRawJson = jsonObj
-        // const blockRawJson = jsonObj.blockraw
 
-        // TODO: mergerSig는 temp값(루이지 테스트)
         const block = Block.build({
           version: blockRawJson.ver,
           blockId: blockRawJson.bID,
@@ -82,6 +79,9 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), (req, res) => {
           height: blockRawJson.hgt,
           txRoot: blockRawJson.txrt,
           mergerId: blockRawJson.mID,
+          chainId: blockRawJson.cID,
+          prevBlockHash: blockRawJson.prevH,
+          prevBlockId: blockRawJson.prevbID,
           mergerSignature: '1'
         })
         await block.save()
