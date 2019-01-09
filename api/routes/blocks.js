@@ -1,5 +1,5 @@
 const {Router} = require('express')
-const {Block, Signer, Transaction} = require('../../models')
+const {Block, Signer, Transaction, RequestData} = require('../../models')
 const bodyParser = require('body-parser')
 const debug = require('debug')('app:demo')
 const router = Router()
@@ -45,12 +45,16 @@ router.get('/blocks/:id', async (req, res) => {
 
     if (block) {
       const transactions = await Transaction.findAll({where: {blockId: block.id}})
+      const txIds = _.pluck(transactions, 'transactionId')
+
+      const requestData = await RequestData.findAll({where: {transactionId: txIds}})
       const signers = await Signer.findAll({where: {blockId: block.id}})
 
       res.json({
         block,
         transactions,
-        signers
+        signers,
+        requestData
       })
     } else {
       res.sendStatus(400)

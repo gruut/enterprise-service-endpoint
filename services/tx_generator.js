@@ -70,7 +70,6 @@ class TxGenerator {
     try {
       const transaction = await this.generateTransaction(content)
       this.transactionId = transaction.txid
-
       const result = _.go(transaction,
         (tx) => {
           return utils.pack(MSG_TX, tx, tx.rID)
@@ -79,8 +78,10 @@ class TxGenerator {
           return utils.protobuf_msg_serializer(TX_PROTO_PATH, 'grpc_se.GrpcMsgTX', packedTx)
         },
         (msg) => {
+          const txId = this.transactionId
+
           _.each(this.clients, (client) => {
-            client.transaction(msg, function (err, res) {
+            client.transaction(msg, async function (err, res) {
               // TODO: logger
               if (err) {
                 console.group()

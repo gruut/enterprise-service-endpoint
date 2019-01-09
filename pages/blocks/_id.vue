@@ -1,4 +1,5 @@
 <template>
+  <div>
   <v-container
     grid-list-xs
   >
@@ -35,18 +36,69 @@
       </v-layout>
     </v-card>
   </v-container>
+  <v-container
+    grid-list-xs
+  >
+    <v-data-iterator
+      :items="txContainer"
+      :rows-per-page-items="rowsPerPageItems"
+      content-tag="v-layout"
+      row
+    >
+      <v-toolbar
+        slot="header"
+        class="mb-2"
+        color="#00937B"
+        dark
+        flat
+      >
+        <v-toolbar-title>Transactions</v-toolbar-title>
+      </v-toolbar>
+      
+      <v-flex
+        slot="item"
+        slot-scope="props"
+        xs12
+        sm6
+        md4
+        lg4
+      >
+        <v-card>
+          <v-card-title>{{ props.item.name }}</v-card-title>
+          <v-divider></v-divider>
+          <v-list>
+            <v-list-tile>
+              ID:
+              <v-list-tile-content class="transaction_info__message">
+                <v-list-tile-sub-title class="overflow-hidden">{{ props.item.id }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile>
+              Message:
+              <v-list-tile-content class="transaction_info__message">
+                <v-list-tile-sub-title class="overflow-hidden">{{ props.item.message }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-card>
+      </v-flex>
+    </v-data-iterator>
+  </v-container>
+  </div>
 </template>
 
 <script>
   import axios from '~/plugins/axios'
   import InfoRow from '../../components/InfoRow'
   const moment = require('moment-timezone')
+  const _ = require('partial-js')
 
   export default {
     name: 'id',
     components: {InfoRow},
     mounted () {
       this.pushBlockIntoItems(this.block)
+      this.pushTransactionsIntoContainer(this.requestData)
       this.isMobile = this.$vuetify.breakpoint.xs
     },
     asyncData ({params, error}) {
@@ -57,7 +109,8 @@
           return {
             block: receivedData.block,
             transactions: receivedData.transactions,
-            signers: receivedData.signers
+            signers: receivedData.signers,
+            requestData: receivedData.requestData
           }
         })
         .catch((e) => {
@@ -73,7 +126,9 @@
     data () {
       return {
         items: [],
-        isMobile: false
+        txContainer: [],
+        isMobile: false,
+        rowsPerPageItems: [1, 5, 10, 20, 100]
       }
     },
     methods: {
@@ -91,6 +146,15 @@
         this.items.push({title: '버전', value: block.version})
         this.items.push({title: '생성시간', value: this.changeTimezone(block.time)})
         this.items.push({title: '서명자 수', value: this.signers.length})
+      },
+      pushTransactionsIntoContainer (transactions) {
+        _.each(transactions, (tx) => {
+          this.txContainer.push({
+            name: `Transaction`,
+            id: tx.transactionId,
+            message: tx.data
+          })
+        })
       }
     }
   }
@@ -105,5 +169,9 @@
 
   .block_info__card {
     margin: 0 auto;
+  }
+  
+  .transaction_info__message {
+   margin-left: 10px;
   }
 </style>

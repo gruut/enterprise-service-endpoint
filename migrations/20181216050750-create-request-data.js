@@ -13,12 +13,7 @@ module.exports = {
       },
       data: {
         allowNull: false,
-        type: Sequelize.BLOB('long')
-      },
-      processed: {
-        allowNull: false,
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
+        type: Sequelize.TEXT
       },
       transactionId: {
         type: Sequelize.STRING
