@@ -62,7 +62,9 @@
         
             <v-slide-y-transition>
               <v-card-text v-show="receivedBlock">
-                <v-btn flat color="#00937B">생성된 블럭 보기</v-btn>
+                <nuxt-link style="text-decoration: none" :to="{name: 'blocks-id', params: { id: blockId }}">
+                  <v-btn flat color="#00937B">생성된 블럭 보기</v-btn>
+                </nuxt-link>
               </v-card-text>
             </v-slide-y-transition>
           </v-card>
@@ -98,7 +100,8 @@
         receivedBlock: false,
         query: false,
         cardTitle: 'Block 생성 대기중입니다.',
-        requestTransactionId: ''
+        requestTransactionId: '',
+        blockId: ''
       }
     },
     methods: {
@@ -146,6 +149,7 @@
                   if (res.status === 200) {
                     this.progressIndicator = 100
                     this.receivedBlock = true
+                    this.blockId = res.data[0].blockId
                     this.cardTitle = 'Block이 생성되었습니다.'
                   }
                 }).catch(e => {
