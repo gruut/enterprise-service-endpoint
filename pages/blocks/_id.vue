@@ -1,70 +1,54 @@
 <template>
-  <section class="block_info">
-    <div class="block_info__title">
-      Block #{{ block.height }}
-    </div>
-    <div class="block_info__table">
-      <div class="block_info__table_row">
-        <div class="block_info__table_cell">블럭 ID</div>
-        <div class="block_info__table_cell block_info__table_cell--truncate">{{ block.blockId }}</div>
-      </div>
-
-      <div class="block_info__table_row">
-        <div class="block_info__table_cell">높이</div>
-        <div class="block_info__table_cell">{{ block.height }}</div>
-      </div>
-
-      <div class="block_info__table_row">
-        <div class="block_info__table_cell">트랜잭션 루트</div>
-        <div class="block_info__table_cell block_info__table_cell--truncate">{{ block.txRoot }}</div>
-      </div>
-
-      <div class="block_info__table_row">
-        <div class="block_info__table_cell">Merger ID</div>
-        <div class="block_info__table_cell">{{ block.mergerId }}</div>
-      </div>
-
-      <div class="block_info__table_row">
-        <div class="block_info__table_cell">Merger 서명</div>
-        <div class="block_info__table_cell">{{ block.mergerSignature }}</div>
-      </div>
-
-      <div class="block_info__table_row">
-        <div class="block_info__table_cell">버전</div>
-        <div class="block_info__table_cell">{{ block.version }}</div>
-      </div>
-
-      <div class="block_info__table_row">
-        <div class="block_info__table_cell">생성시간</div>
-        <div class="block_info__table_cell">{{ block.time | changeTimezone() }}</div>
-      </div>
-
-      <div v-if="signers.length > 0" class="block_info__table_row">
-        <div class="block_info__table_cell">서명자 수</div>
-        <div class="block_info__table_cell">{{ signers.length }}</div>
-      </div>
-    </div>
-
-    <div v-if="transactions.length > 0">
-      <div class="block_info__title">
-        Transactions
-      </div>
-      <div class="block_info__table">
-        <div v-for="transaction in transactions" class="block_info__table_row">
-          <div class="block_info__table_cell">트랜잭션 ID</div>
-          <div class="block_info__table_cell block_info__table_cell--truncate">{{ transaction.transactionId }}</div>
+  <v-container
+    grid-list-xs
+  >
+    <v-card
+      max-width="1000"
+      class="block_info__card"
+    >
+      <v-layout
+        column
+      >
+        <v-card-title
+          class="block_info__card_title"
+        >
+          Block #{{ block.height }}
+        </v-card-title>
+        <div>
+          <info-row
+            v-for="item in items"
+            :is-mobile="isMobile"
+            class="block_info__cell"
+          >
+            <template
+              slot="title"
+            >
+              {{ item.title }}
+            </template>
+            <template
+              slot="value"
+            >
+              {{ item.value }}
+            </template>
+          </info-row>
         </div>
-      </div>
-    </div>
-  </section>
+      </v-layout>
+    </v-card>
+  </v-container>
 </template>
 
 <script>
   import axios from '~/plugins/axios'
+  import InfoRow from '../../components/InfoRow'
   const moment = require('moment-timezone')
 
   export default {
     name: 'id',
+    components: {InfoRow},
+    mounted () {
+      this.pushBlockIntoItems(this.block)
+      this.isMobile = this.$vuetify.breakpoint.xs
+    },
     asyncData ({params, error}) {
       return axios.get('/api/blocks/' + params.id)
         .then((res) => {
@@ -81,90 +65,45 @@
           error({statusCode: 404, message: 'Block not found'})
         })
     },
-    filters: {
-      changeTimezone: (time) => {
-        return moment.tz(time, 'Asia/Seoul').format('MMMM Do YYYY, h:mm:ss a')
-      }
-    },
     head () {
       return {
         title: `Block ${this.block.height}`
+      }
+    },
+    data () {
+      return {
+        items: [],
+        isMobile: false
+      }
+    },
+    methods: {
+      changeTimezone: (time) => {
+        return moment.tz(time, 'Asia/Seoul').format('MMMM Do YYYY, h:mm:ss a')
+      },
+      pushBlockIntoItems (block) {
+        this.items.push({title: '블럭 ID', value: block.blockId})
+        this.items.push({title: '이전 블럭 ID', value: block.prevBlockId})
+        this.items.push({title: '이전 블럭 Hash', value: block.prevBlockHash})
+        this.items.push({title: '높이', value: block.height})
+        this.items.push({title: '트랜잭션 루트', value: block.txRoot})
+        this.items.push({title: 'Merger ID', value: block.mergerId})
+        this.items.push({title: 'Chain ID', value: block.chainId})
+        this.items.push({title: '버전', value: block.version})
+        this.items.push({title: '생성시간', value: this.changeTimezone(block.time)})
+        this.items.push({title: '서명자 수', value: this.signers.length})
       }
     }
   }
 </script>
 
-<style lang="scss" scoped>
-  $green: #00937B;
-  $break-small: 600px;
-
-  .block_info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 3rem;
+<style scoped>
+  .block_info__card_title {
+    background-color: #00937B;
+    color: #F5F5F5;
+    font-weight: bold;
   }
 
-  .block_info__title {
-    text-align: center;
-    margin-top: 30px;
-    font-size: 2rem;
-    font-weight: 300;
-
-    @media screen and (max-width: $break-small){
-      font-size: 1.6rem;
-    }
-  }
-
-  .block_info__table {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    padding-top: 2rem;
-    font-family: "Ubuntu", sans-serif;
-    font-size: 1.5rem;
-
-    @media screen and (max-width: $break-small){
-      width: 95%;
-      align-items: center;
-    }
-  }
-
-  .block_info__table_row {
-    display: flex;
-    width: 100%;
-    background-color: rgba(200, 200, 200, 0.05);
-    padding: 1rem 2rem;
-
-    @media screen and (max-width: $break-small){
-      padding: 0.5rem 1rem;
-    }
-  }
-
-  .block_info__table_row:nth-child(odd) {
-    background-color: rgba($green, 0.2);
-  }
-
-  .block_info__table_cell {
-    flex-grow: 1;
-    flex-basis: 100%;
-    font-size: 1rem;
-    padding: 8px;
-    @media screen and (max-width: $break-small){
-      font-size: 0.6rem;
-    }
-  }
-
-  .block_info__table_cell:nth-child(even) {
-    flex-grow: 1;
-    text-align: center;
-  }
-
-  .block_info__table_cell--truncate {
-    @media screen and (max-width: $break-small){
-      font-size: 5px;
-    }
+  .block_info__card {
+    margin: 0 auto;
   }
 </style>
