@@ -60,9 +60,10 @@ class TxGenerator {
     const packageDefinition = protoLoader.loadSync(TX_PROTO_PATH, LOAD_ARGS)
     const ProtoTransaction = grpc.loadPackageDefinition(packageDefinition).grpc_se
 
-    const remoteServerAddr = `${process.env.MERGER_ADDRESS}:${process.env.MERGER_PORT}`
+    const remoteServerAddrs = [process.env.MERGER_ADDRESS1, process.env.MERGER_ADDRESS2, process.env.MERGER_ADDRESS3]
     this.transactionId = ''
-    this.client = new ProtoTransaction.GruutSeService(remoteServerAddr, grpc.credentials.createInsecure())
+
+    this.clients = _.map(remoteServerAddrs, (addr) => new ProtoTransaction.GruutSeService(addr, grpc.credentials.createInsecure()))
   }
 
   async sendTransaction (content) {
@@ -78,13 +79,21 @@ class TxGenerator {
           return utils.protobuf_msg_serializer(TX_PROTO_PATH, 'grpc_se.GrpcMsgTX', packedTx)
         },
         (msg) => {
-          this.client.transaction(msg, (err, res) => {
-            // TODO: logger
-            if (err) {
-              console.error(`Response from Merger: ${err}`)
-            } else {
-              console.log(`Response from Merger: ${res.message}`)
-            }
+          _.each(this.clients, (client) => {
+            client.transaction(msg, function (err, res) {
+              // TODO: logger
+              if (err) {
+                console.group()
+                console.log(`MergerInfo: ${client}`)
+                console.error(`Response from Merger: ${err}`)
+                console.groupEnd()
+              } else {
+                console.group()
+                console.log(`MergerInfo: ${client}`)
+                console.log(`Response from Merger: ${res.message}`)
+                console.groupEnd()
+              }
+            })
           })
 
           return true
