@@ -12,12 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     data: {
       allowNull: false,
-      type: DataTypes.BLOB('long')
-    },
-    processed: {
-      allowNull: false,
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
+      type: DataTypes.TEXT
     },
     transactionId: {
       type: DataTypes.STRING
