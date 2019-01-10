@@ -10,7 +10,6 @@ const _ = require('partial-js')
 router.get('/transactions', async (req, res) => {
   try {
     let transactions = null
-    console.log(req.query)
     if (_.isEmpty(req.query)) {
       transactions = await Transaction.findAll({
         order: [
@@ -31,6 +30,28 @@ router.get('/transactions', async (req, res) => {
     }
 
     res.json(transactions)
+  } catch (e) {
+    res.sendStatus(500)
+    throw e
+  }
+})
+
+/* GET Transaction by ID. */
+router.get('/transactions/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id)
+    const transaction = await Transaction.findById(id)
+    const requestData = await RequestData.findOne({where: {
+      transactionId: transaction.transactionId
+    }})
+    if (transaction) {
+      res.json({
+        transaction,
+        requestData
+      })
+    } else {
+      res.sendStatus(400)
+    }
   } catch (e) {
     res.sendStatus(500)
     throw e

@@ -63,24 +63,33 @@
         md4
         lg4
       >
-        <v-card>
-          <v-card-title>{{ props.item.name }}</v-card-title>
-          <v-divider></v-divider>
-          <v-list>
-            <v-list-tile>
-              ID:
-              <v-list-tile-content class="transaction_info__message">
-                <v-list-tile-sub-title class="overflow-hidden">{{ props.item.id }}</v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile>
-              Message:
-              <v-list-tile-content class="transaction_info__message">
-                <v-list-tile-sub-title class="overflow-hidden">{{ props.item.message }}</v-list-tile-sub-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-        </v-card>
+        <nuxt-link class="transaction_info__link" :to="{name: 'transactions-id', params: { id: props.item.id }}">
+          <v-card>
+            <v-card-title>{{ props.item.name }}</v-card-title>
+            <v-divider></v-divider>
+            <v-list>
+              <v-list-tile>
+                ID:
+                <v-list-tile-content class="transaction_info__message">
+                  <v-list-tile-sub-title class="overflow-hidden">{{ props.item.tx_id }}</v-list-tile-sub-title>
+                </v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                Message:
+                <v-list-tile-content class="transaction_info__message">
+                  <v-list-tile-sub-title class="overflow-hidden">{{ props.item.message }}</v-list-tile-sub-title>
+                </v-list-tile-content>
+              </v-list-tile>
+              <v-list-tile>
+                <v-list-tile-content class="transaction_info__detail_button">
+                  <v-btn flat color="#00937B">
+                    상세 보기
+                  </v-btn>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+          </v-card>
+        </nuxt-link>
       </v-flex>
     </v-data-iterator>
   </v-container>
@@ -98,7 +107,7 @@
     components: {InfoRow},
     mounted () {
       this.pushBlockIntoItems(this.block)
-      this.pushTransactionsIntoContainer(this.requestData)
+      this.pushTransactionsIntoContainer(this.transactions, this.requestData)
       this.isMobile = this.$vuetify.breakpoint.xs
     },
     asyncData ({params, error}) {
@@ -147,12 +156,14 @@
         this.items.push({title: '생성시간', value: this.changeTimezone(block.time)})
         this.items.push({title: '서명자 수', value: this.signers.length})
       },
-      pushTransactionsIntoContainer (transactions) {
+      pushTransactionsIntoContainer (transactions, requestData) {
         _.each(transactions, (tx) => {
+          const datum = _.find(requestData, (d) => d.transactionId === tx.transactionId)
           this.txContainer.push({
             name: `Transaction`,
-            id: tx.transactionId,
-            message: tx.data
+            id: tx.id,
+            tx_id: tx.transactionId,
+            message: datum.data
           })
         })
       }
@@ -160,9 +171,11 @@
   }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  $green: #00937B;
+  
   .block_info__card_title {
-    background-color: #00937B;
+    background-color: $green;
     color: #F5F5F5;
     font-weight: bold;
   }
@@ -173,5 +186,13 @@
   
   .transaction_info__message {
     margin-left: 10px;
+  }
+
+  .transaction_info__link {
+    text-decoration: none;
+  }
+
+  .transaction_info__detail_button {
+    align-items: flex-end;
   }
 </style>
