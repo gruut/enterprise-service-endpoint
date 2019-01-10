@@ -26,7 +26,7 @@
         <span class="subheading font-weight-bold explorer_body__table_cell--header" v-text="header.text"></span>
       </template>
       <template slot="items" slot-scope="{ item }">
-        <td :class="{'explorer_body__table_cell--new': item.isActive}">
+        <td class="explorer_body__table_cell--id" :class="{'explorer_body__table_cell--new': item.isActive}">
           <nuxt-link :to="{ name: 'blocks-id', params: { id: item.id }}"
                      class="explorer_body__table_cell explorer_body__table_cell--link">
             {{ item.blockId }}
@@ -298,5 +298,9 @@
   }
   .explorer_body__table_cell--new {
     animation: newBlock 3s;
+  }
+
+  .explorer_body__table_cell--id {
+    text-align: center;
   }
 </style>

@@ -172,6 +172,6 @@
   }
   
   .transaction_info__message {
-   margin-left: 10px;
+    margin-left: 10px;
   }
 </style>
