@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'service-endpoint',
       script: './node_modules/nuxt/bin/nuxt.js',
-      args: 'run start',
+      args: '',
       env: {
         'NODE_ENV': 'production'
       }
