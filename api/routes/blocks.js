@@ -45,7 +45,10 @@ router.get('/blocks/:id', async (req, res) => {
 
     if (block) {
       const transactions = await Transaction.findAll({where: {blockId: block.id}})
-      const txIds = _.pluck(transactions, 'transactionId')
+      let txIds = _.pluck(transactions, 'transactionId')
+      if (req.params.tx_id) {
+        txIds = _.filter(txIds, (txId) => txId === req.params.tx_id)
+      }
 
       const requestData = await RequestData.findAll({where: {transactionId: txIds}})
       const signers = await Signer.findAll({where: {blockId: block.id}})
