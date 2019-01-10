@@ -1,77 +1,79 @@
 <template>
-  <div class="form_container">
-    <form v-if="!transactionSent" class="form_container__form" v-on:submit.prevent>
-      <div class="form_container__input_field">
-        <v-text-field
-                v-model="name"
-                :error-messages="nameErrors"
-                :counter="10"
-                label="닉네임"
-                color="#00937B"
-                required
-                @input="$v.name.$touch"
-                @blur="$v.name.$touch"
-        ></v-text-field>
-      </div>
-      <div class="form_container__input_field">
-        <v-textarea
-                v-model="message"
-                id="form_container__input_field_textarea"
-                outline
-                :error-messages="messageErrors"
-                rows="10"
-                counter="100"
-                label="메세지를 입력해주세요."
-                color="#00937B"
-                required
-                @input="$v.message.$touch"
-                @blur="$v.message.$touch"
-        ></v-textarea>
-      </div>
-      <div>
-        <v-btn
-                type="submit"
-                color="#00937B"
-                block
-                large
-                @click="sendTransaction"
-        >
-          <span class="form_container__submit_button_text">메세지 전송</span>
-        </v-btn>
-      </div>
-    </form>
-    <div v-if="transactionSent">
-      <v-layout row>
-        <v-flex xs12 sm6 offset-sm3>
-          <v-card class="form_container__progress_card">
-            <v-card-title primary-title>
-              <div>
-                <div class="headline">{{ cardTitle }}</div>
-                <span v-if="!receivedBlock" class="left grey--text">12초 정도 소요됩니다.</span>
+  <v-container>
+    <v-flex>
+      <form v-if="!transactionSent" class="form_container__form" v-on:submit.prevent>
+        <div class="form_container__input_field">
+          <v-text-field
+                  v-model="name"
+                  :error-messages="nameErrors"
+                  :counter="10"
+                  label="닉네임"
+                  color="#00937B"
+                  required
+                  @input="$v.name.$touch"
+                  @blur="$v.name.$touch"
+          ></v-text-field>
+        </div>
+        <div class="form_container__input_field">
+          <v-textarea
+                  v-model="message"
+                  id="form_container__input_field_textarea"
+                  outline
+                  :error-messages="messageErrors"
+                  rows="10"
+                  counter="100"
+                  label="메세지를 입력해주세요."
+                  color="#00937B"
+                  required
+                  @input="$v.message.$touch"
+                  @blur="$v.message.$touch"
+          ></v-textarea>
+        </div>
+        <div>
+          <v-btn
+                  type="submit"
+                  color="#00937B"
+                  block
+                  large
+                  @click="sendTransaction"
+          >
+            <span class="form_container__submit_button_text">메세지 전송</span>
+          </v-btn>
+        </div>
+      </form>
+      <div v-if="transactionSent">
+        <v-layout row>
+          <v-flex xs12 sm6 offset-sm3>
+            <v-card class="form_container__progress_card">
+              <v-card-title primary-title>
+                <div>
+                  <div class="headline">{{ cardTitle }}</div>
+                  <span v-if="!receivedBlock" class="left grey--text">12초 정도 소요됩니다.</span>
+                </div>
+              </v-card-title>
+              <div class="form_container__progress_circular">
+                <v-progress-linear
+                        v-model="progressIndicator"
+                        :indeterminate="query"
+                        color="#00937B"
+                        :width="1"
+                >
+                </v-progress-linear>
               </div>
-            </v-card-title>
-            <div class="form_container__progress_circular">
-              <v-progress-linear
-                      v-model="progressIndicator"
-                      :indeterminate="query"
-                      color="#00937B"
-                      :width="1"
-              >
-              </v-progress-linear>
-            </div>
-        
-            <v-slide-y-transition>
-              <v-card-text v-show="receivedBlock">
-                <nuxt-link style="text-decoration: none" :to="{name: 'blocks-id', params: { id: blockId }}">
-                  <v-btn flat color="#00937B">생성된 블럭 보기</v-btn>
-                </nuxt-link>
-              </v-card-text>
-            </v-slide-y-transition>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </div>
-  </div>
+          
+              <v-slide-y-transition>
+                <v-card-text v-if="receivedBlock">
+                  <nuxt-link style="text-decoration: none" :to="{name: 'blocks-id', params: { id: blockId }}">
+                    <v-btn flat color="#00937B">생성된 블럭 보기</v-btn>
+                  </nuxt-link>
+                </v-card-text>
+              </v-slide-y-transition>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </div>
+    </v-flex>
+  </v-container>
 </template>
 
 <script>
@@ -144,9 +146,9 @@
         setTimeout(() => {
           if (this.requestTransactionId.length > 0) {
             this.msgHeaderChecker = setInterval(() => {
-              axios.get(`/api/transactions/?transactionId=${this.requestTransactionId}`)
+              axios.get(`/api/transactions/?${queryString.stringify({transactionId: this.requestTransactionId})}`)
                 .then((res) => {
-                  if (res.status === 200) {
+                  if (res.status === 200 && res.data !== null) {
                     this.progressIndicator = 100
                     this.receivedBlock = true
                     this.blockId = res.data[0].blockId
@@ -172,7 +174,7 @@
             this.progressIndicator += 10
           }, 1000)
           this.query = false
-        }, 2000)
+        }, 4000)
       }
     },
     computed: {
@@ -201,18 +203,8 @@
 <style lang="scss" scoped>
   $green: #00937B;
   
-  .form_container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background-color: #ffffff;
-    min-height: 500px;
-    padding-bottom: 2rem;
-  }
-  
   .form_container__form {
     font-size: 16px;
-    width: 40%;
     padding: 30px 30px;
     border-radius: 4px;
     margin: 50px auto;

@@ -78,8 +78,6 @@ class TxGenerator {
           return utils.protobuf_msg_serializer(TX_PROTO_PATH, 'grpc_se.GrpcMsgTX', packedTx)
         },
         (msg) => {
-          const txId = this.transactionId
-
           _.each(this.clients, (client) => {
             client.transaction(msg, async function (err, res) {
               // TODO: logger
