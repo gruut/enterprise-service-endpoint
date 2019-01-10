@@ -1,9 +1,12 @@
 module.exports = {
   apps: [
     {
-      name: 'nuxt-prod',
-      script: 'npm',
-      args: 'run start'
+      name: 'service-endpoint',
+      script: './node_modules/nuxt/bin/nuxt.js',
+      args: 'run start',
+      env: {
+        'NODE_ENV': 'production'
+      }
     }
   ]
 }

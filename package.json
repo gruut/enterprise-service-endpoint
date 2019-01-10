@@ -8,6 +8,7 @@
     "dev": "DEBUG=nuxt:*,app:* nodemon --watch api --exec \"nuxt\"",
     "build": "nuxt build",
     "start": "nuxt build && nuxt start --env",
+    "prod": "pm2 startOrRestart ecosystem.config.js --name service-endpoint -- start",
     "precommit": "npm run lint",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
     "test": "mocha tests/**/*.js --exit"
@@ -43,7 +44,7 @@
     "nodemon": "^1.18.9",
     "nuxt": "latest",
     "partial-js": "^1.1.6",
-    "pm2": "^3.2.4",
+    "pm2": "^3.2.7",
     "protobufjs": "^6.8.8",
     "sass-loader": "^7.1.0",
     "sequelize": "^4.41.0",
