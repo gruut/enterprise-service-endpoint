@@ -64,33 +64,33 @@
         md4
         lg4
       >
-        <nuxt-link class="transaction_info__link" :to="{name: 'transactions-id', params: { id: props.item.id }}">
-          <v-card>
-            <v-card-title>{{ props.item.name }}</v-card-title>
-            <v-divider></v-divider>
-            <v-list>
-              <v-list-tile>
-                ID:
-                <v-list-tile-content class="transaction_info__message">
-                  <v-list-tile-sub-title class="overflow-hidden">{{ props.item.tx_id }}</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                Message:
-                <v-list-tile-content class="transaction_info__message">
-                  <v-list-tile-sub-title class="overflow-hidden">{{ props.item.message }}</v-list-tile-sub-title>
-                </v-list-tile-content>
-              </v-list-tile>
-              <v-list-tile>
-                <v-list-tile-content class="transaction_info__detail_button">
+        <v-card>
+          <v-card-title>{{ props.item.name }}</v-card-title>
+          <v-divider></v-divider>
+          <v-list>
+            <v-list-tile>
+              ID:
+              <v-list-tile-content class="transaction_info__message">
+                <v-list-tile-sub-title class="overflow-hidden">{{ props.item.tx_id }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile v-if="props.item.message">
+              Message:
+              <v-list-tile-content class="transaction_info__message">
+                <v-list-tile-sub-title class="overflow-hidden">{{ props.item.message }}</v-list-tile-sub-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile>
+              <v-list-tile-content class="transaction_info__detail_button">
+                <nuxt-link class="transaction_info__link" :to="{name: 'transactions-id', params: { id: props.item.id }}">
                   <v-btn flat color="#00937B">
                     상세 보기
                   </v-btn>
-                </v-list-tile-content>
-              </v-list-tile>
-            </v-list>
-          </v-card>
-        </nuxt-link>
+                </nuxt-link>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list>
+        </v-card>
       </v-flex>
     </v-data-iterator>
   </v-container>
