@@ -90,8 +90,7 @@ describe('POST block', function () {
             time: '1545292716',
             hgt: 1,
             txrt: 'dCc8MsxGDMpc1QEKmt/7EK8l8IcOe9owKwSwCenFvw4=',
-            mID: 'TUVSR0VSLTE=',
-            mergerSignature: '1'
+            mID: 'TUVSR0VSLTE='
           }
         })
       })
@@ -123,7 +122,6 @@ describe('POST block', function () {
             hgt: 1,
             txrt: 'dCc8MsxGDMpc1QEKmt/7EK8l8IcOe9owKwSwCenFvw4=',
             mID: 'TUVSR0VSLTE=',
-            mergerSignature: '1',
             SSig: [
               {
                 sID: 'MDAwMDAwMTk=',

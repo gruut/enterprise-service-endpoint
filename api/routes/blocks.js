@@ -87,12 +87,14 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), (req, res) => {
           mergerId: blockRawJson.mID,
           chainId: blockRawJson.cID,
           prevBlockHash: blockRawJson.prevH,
-          prevBlockId: blockRawJson.prevbID,
-          mergerSignature: '1'
+          prevBlockId: blockRawJson.prevbID
         })
         await block.save()
 
         let signers = []
+
+        console.log(`Transaction: ${blockRawJson.txids}`)
+        console.log(`SSig: ${blockRawJson.SSig}`)
         _.each(blockRawJson.SSig, async (signer) => {
           signers.push({
             signerId: signer.sID,
