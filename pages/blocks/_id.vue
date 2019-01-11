@@ -145,9 +145,9 @@
         return moment.tz(time, 'Asia/Seoul').format('MMMM Do YYYY, h:mm:ss a')
       },
       pushBlockIntoItems (block) {
-        this.items.push({title: '블럭 ID', value: block.blockId})
-        this.items.push({title: '이전 블럭 ID', value: block.prevBlockId})
-        this.items.push({title: '이전 블럭 Hash', value: block.prevBlockHash})
+        this.items.push({title: '블록 ID', value: block.blockId})
+        this.items.push({title: '이전 블록 ID', value: block.prevBlockId})
+        this.items.push({title: '이전 블록 Hash', value: block.prevBlockHash})
         this.items.push({title: '높이', value: block.height})
         this.items.push({title: '트랜잭션 루트', value: block.txRoot})
         this.items.push({title: 'Merger ID', value: block.mergerId})
@@ -159,12 +159,17 @@
       pushTransactionsIntoContainer (transactions, requestData) {
         _.each(transactions, (tx) => {
           const datum = _.find(requestData, (d) => d.transactionId === tx.transactionId)
-          this.txContainer.push({
+
+          let txDatum = {
             name: `Transaction`,
             id: tx.id,
-            tx_id: tx.transactionId,
-            message: datum.data
-          })
+            tx_id: tx.transactionId
+          }
+          if (datum) {
+            txDatum.message = datum.data
+          }
+
+          this.txContainer.push(txDatum)
         })
       }
     }

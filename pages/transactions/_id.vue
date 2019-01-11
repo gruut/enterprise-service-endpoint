@@ -84,12 +84,17 @@
           {
             title: '트랜잭션 ID',
             value: tx.transactionId
-          },
-          {
-            title: '메세지',
-            value: requestData.data
           }
         )
+
+        if (requestData) {
+          this.items.push(
+            {
+              title: '메세지',
+              value: requestData.data
+            }
+          )
+        }
       }
     }
   }

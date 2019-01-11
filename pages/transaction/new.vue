@@ -64,7 +64,7 @@
               <v-slide-y-transition>
                 <v-card-text v-if="receivedBlock">
                   <nuxt-link style="text-decoration: none" :to="{name: 'blocks-id', params: { id: blockId, tx_id: requestTransactionId }}">
-                    <v-btn flat color="#00937B">생성된 블럭 보기</v-btn>
+                    <v-btn flat color="#00937B">생성된 블록 보기</v-btn>
                   </nuxt-link>
                 </v-card-text>
               </v-slide-y-transition>
