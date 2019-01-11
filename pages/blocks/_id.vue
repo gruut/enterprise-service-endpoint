@@ -44,6 +44,7 @@
       :rows-per-page-items="rowsPerPageItems"
       content-tag="v-layout"
       row
+      wrap
     >
       <v-toolbar
         slot="header"
@@ -137,7 +138,7 @@
         items: [],
         txContainer: [],
         isMobile: false,
-        rowsPerPageItems: [1, 5, 10, 20, 100]
+        rowsPerPageItems: [3, 10, 20, 100]
       }
     },
     methods: {
