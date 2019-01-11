@@ -120,16 +120,24 @@ describe('POST block', function () {
             bID: 'xo2a8TIhzOYE1aUZMta7lGJSlCdgHoG9eyrldLbq6Nw=',
             time: '1545292716',
             hgt: 1,
+            cID: 1,
             txrt: 'dCc8MsxGDMpc1QEKmt/7EK8l8IcOe9owKwSwCenFvw4=',
+            prevH: 'dCc8MsxGDMpc1QEKmt/7EK8l8IcOe9owKwSwCenFvw4=',
+            prevbID: 'xo2a8TIhzOYE1aUZMta7lGJSlCdgHoG9eyrldLbq6Nw',
             mID: 'TUVSR0VSLTE=',
             SSig: [
               {
                 sID: 'MDAwMDAwMTk=',
                 sig: 'olMN/ERvmBANJSf2MbscdapS2jblWkD/aiOKC2owTK63Tu1MFicyki7IyM zf4I8eel OAx1ML1eeQcNIfYronIkvBdUgbhSPDb3G3cHpLlKrlZXDYnhjVlwbnpjPgUDSWJKhjXmzC/zGYE/Bp9ptAbz aSvv3hL4UVNr0nzFXx8Yc0tpyE2bMNy0RDMkc5PrF6OOYdkrvPAUPc2XgKXW6WTOC72meRpzJXmrtLjARi1iST2ZtR1VgO6vLyeg6X2NiOjGCT0YDCehDZm71O1wC/z A7wmpswebe0DSIR7FGLnVYsMO7N35/APLAYxH8kYd4CxY4LUXUPyCrLocA1HA=='
+              },
+              {
+                sID: 'MDAwMDAwMTk==',
+                sig: 'olMN/ERvmBANJSf2MbscdapS2jblWkD/aiOKC2owTK63Tu1MFicyki7IyM zf4I8eel OAx1ML1eeQcNIfYronIkvBdUgbhSPDb3G3cHpLlKrlZXDYnhjVlwbnpjPgUDSWJKhjXmzC/zGYE/Bp9ptAbz aSvv3hL4UVNr0nzFXx8Yc0tpyE2bMNy0RDMkc5PrF6OOYdkrvPAUPc2XgKXW6WTOC72meRpzJXmrtLjARi1iST2ZtR1VgO6vLyeg6X2NiOjGCT0YDCehDZm71O1wC/z A7wmpswebe0DSIR7FGLnVYsMO7N35/APLAYxH8kYd4CxY4LUXUPyCrLocA1HA==='
               }
             ],
             txids: [
-              'dSupNe0rqGpXKdvnQFB3pvtAHxvj3pUsJSGN3UbDWWc='
+              'dSupNe0rqGpXKdvnQFB3pvtAHxvj3pUsJSGN3UbDWWc=',
+              'dSupNe0rqGpXKdvnQFB3pvtAHxvj3pUsJSGN3UbDWWc=='
             ]
           }
         })
