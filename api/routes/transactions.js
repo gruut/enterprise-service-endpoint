@@ -1,7 +1,7 @@
 const {Router} = require('express')
 const crypto = require('crypto')
 const bodyParser = require('body-parser')
-const {RequestData, Transaction} = require('../../models')
+const {Block, RequestData, Transaction, Signer} = require('../../models')
 const TxGenerator = require('../../services/tx_generator')
 const router = Router()
 const debug = require('debug')('app:demo')
@@ -44,10 +44,15 @@ router.get('/transactions/:id', async (req, res) => {
     const requestData = await RequestData.findOne({where: {
       transactionId: transaction.transactionId
     }})
+    const block = await Block.findById(transaction.blockId, {
+      include: [Signer]
+    })
+
     if (transaction) {
       res.json({
         transaction,
-        requestData
+        requestData,
+        block
       })
     } else {
       res.sendStatus(400)
