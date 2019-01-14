@@ -68,7 +68,7 @@ router.post('/transactions', bodyParser.urlencoded({extended: false}), async (re
   try {
     const content = req.body.message
     let requestData = RequestData.build({
-      requesterId: process.env.MY_ID,
+      requesterId: req.body.requesterId,
       data: content,
       signed: false
     })

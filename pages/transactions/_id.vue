@@ -69,10 +69,16 @@ export default {
       })
 
       if (requestData) {
-        this.items.push({
-          title: '메세지',
-          value: requestData.data
-        })
+        this.items.concat([
+          {
+            title: '작성자',
+            value: requestData.requesterId
+          },
+          {
+            title: '메세지',
+            value: requestData.data
+          }
+        ])
       }
     }
   }
