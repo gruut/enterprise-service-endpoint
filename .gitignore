@@ -16,6 +16,7 @@ build
 .idea
 .vscode
 .history
+coverage
 
 .env
 /SE_sk.pem
