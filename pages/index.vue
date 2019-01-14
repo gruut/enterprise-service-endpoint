@@ -32,7 +32,7 @@
             {{ item.blockId }}
           </nuxt-link>
         </td>
-        <td :class="{'explorer_body__table_cell--new': item.isActive}" class="text-xs-center">{{ item.version }}</td>
+        <td :class="{'explorer_body__table_cell--new': item.isActive}" class="text-xs-center">{{ item.transactionsCount }}</td>
         <td :class="{'explorer_body__table_cell--new': item.isActive}" class="text-xs-center">{{ item.time }}</td>
         <td :class="{'explorer_body__table_cell--new': item.isActive}" class="text-xs-center">{{ item.height }}</td>
       </template>
@@ -81,7 +81,7 @@
             value: 'blockId'
           },
           {
-            text: 'Block Version',
+            text: 'Transaction 개수',
             sortable: false,
             align: 'center',
             value: 'version'
@@ -110,6 +110,7 @@
         let {data} = await axios.get('/api/blocks')
         data.forEach(block => {
           block.time = moment(block.time).format('MMMM Do YYYY, h:mm:ss a')
+          block.transactionsCount = block.Transactions.length
         })
 
         return data
