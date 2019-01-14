@@ -5,6 +5,7 @@
         <div class="form_container__input_field">
           <v-text-field
             v-model="name"
+            id="form_container__input_field_name"
             :error-messages="nameErrors"
             :counter="10"
             label="닉네임"
@@ -116,6 +117,9 @@ export default {
       const textareaElem = document.getElementById(
         'form_container__input_field_textarea'
       )
+      const nameElem = document.getElementById(
+        'form_container__input_field_name'
+      )
       axios.defaults.headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
@@ -123,6 +127,7 @@ export default {
         .post(
           '/api/transactions',
           queryString.stringify({
+            requesterId: nameElem.value,
             message: textareaElem.value
           })
         )
