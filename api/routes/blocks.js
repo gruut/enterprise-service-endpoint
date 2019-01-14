@@ -100,7 +100,7 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), (req, res) => {
             blockId: block.id
           })
         })
-        await Signer.bulkCreate(signers, {individualHooks: true})
+        await Signer.bulkCreate(signers)
 
         let transactions = []
         _.each(blockRawJson.txids, (txId) => {
@@ -109,7 +109,7 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), (req, res) => {
             blockId: block.id
           })
         })
-        await Transaction.bulkCreate(transactions, {individualHooks: true})
+        await Transaction.bulkCreate(transactions)
       }
     )
     res.sendStatus(200)
