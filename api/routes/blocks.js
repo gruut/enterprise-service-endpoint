@@ -13,8 +13,7 @@ router.get('/blocks', async (req, res) => {
       blocks = await Block.findAll({
         order: [
           ['time', 'DESC']
-        ],
-        include: [Transaction]
+        ]
       })
     } else {
       const { height } = req.query
