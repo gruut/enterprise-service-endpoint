@@ -23,6 +23,12 @@ module.exports = {
     database: 'gruut_webserver',
     host: '127.0.0.1',
     dialect: 'mysql',
-    operatorsAliases: false
+    operatorsAliases: false,
+    pool: {
+      max: 5,
+      min: 0,
+      idle: 20000,
+      acquire: 20000
+    }
   }
 }
