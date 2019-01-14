@@ -13,20 +13,23 @@ router.get('/blocks', async (req, res) => {
       blocks = await Block.findAll({
         order: [
           ['time', 'DESC']
-        ]
+        ],
+        include: [Transaction]
       })
     } else {
       const { height } = req.query
       const block = await Block.findOne({
-        where: {height}
+        where: {height},
+        include: [Transaction]
       })
 
       if (block) {
         blocks = [block]
       }
     }
-
-    res.json(blocks)
+    res.json(
+      blocks
+    )
   } catch (err) {
     res.sendStatus(500)
     throw err
