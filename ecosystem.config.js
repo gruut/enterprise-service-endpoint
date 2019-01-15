@@ -6,7 +6,8 @@ module.exports = {
       args: '',
       env: {
         'NODE_ENV': 'production'
-      }
+      },
+      output: '/dev/null'
     }
   ]
 }
