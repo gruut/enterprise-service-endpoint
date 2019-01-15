@@ -9,11 +9,18 @@ const _ = require('../../plugins/partial')
 router.get('/blocks', async (req, res) => {
   try {
     let blocks = null
-    if (_.isEmpty(req.query)) {
+    if (_.isEmpty(req.query.height)) {
+      const page = parseInt(req.query.page)
+      const rows = parseInt(req.query.rows)
+      const offset = (page - 1) * rows
+
       blocks = await Block.findAll({
         order: [
           ['time', 'DESC']
-        ]
+        ],
+        include: [Transaction],
+        limit: rows,
+        offset
       })
     } else {
       const { height } = req.query
@@ -26,8 +33,10 @@ router.get('/blocks', async (req, res) => {
         blocks = [block]
       }
     }
-    res.json(
-      blocks
+    res.json({
+      blocks,
+      totalBlocksCount: blocks.length
+    }
     )
   } catch (err) {
     res.sendStatus(500)
