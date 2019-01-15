@@ -77,7 +77,7 @@ export default {
         descending: true
       },
       paginationLoading: false,
-      rowsPerPageItems: [10, 20, 30, 40],
+      rowsPerPageItems: [5, 10, 20, 30],
       headers: [
         {
           text: 'Block ID',
