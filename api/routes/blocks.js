@@ -1,9 +1,24 @@
 const {Router} = require('express')
 const {Block, Signer, Transaction, RequestData} = require('../../models')
 const bodyParser = require('body-parser')
-const debug = require('debug')('app:demo')
 const router = Router()
 const _ = require('../../plugins/partial')
+
+function addTxCountProperty (blocks) {
+  return new Promise((resolve, reject) => {
+    const blocksArr = _.map(blocks, async (block) => {
+      const count = await Transaction.count({
+        where: {
+          'blockId': block.id
+        }
+      })
+      
+      return Object.assign({}, block.dataValues, { transactionCount: count })
+    })
+
+    resolve(blocksArr)
+  })
+}
 
 /* GET Blocks listing. */
 router.get('/blocks', async (req, res) => {
@@ -18,10 +33,11 @@ router.get('/blocks', async (req, res) => {
         order: [
           ['time', 'DESC']
         ],
-        include: [Transaction],
         limit: rows,
         offset
       })
+
+      blocks = await addTxCountProperty(blocks)
     } else {
       const { height } = req.query
       const block = await Block.findOne({
@@ -36,8 +52,7 @@ router.get('/blocks', async (req, res) => {
     res.json({
       blocks,
       totalBlocksCount: blocks.length
-    }
-    )
+    })
   } catch (err) {
     res.sendStatus(500)
     throw err

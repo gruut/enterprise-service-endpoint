@@ -28,7 +28,7 @@
             class="explorer_body__table_cell explorer_body__table_cell--link"
           >{{ item.blockId }}</nuxt-link>
         </td>
-        <td :class="{'explorer_body__table_cell--new': item.isActive}" class="text-xs-center">{{ item.transactionsCount }}</td>
+        <td :class="{'explorer_body__table_cell--new': item.isActive}" class="text-xs-center">{{ item.transactionCount }}</td>
         <td
           :class="{'explorer_body__table_cell--new': item.isActive}"
           class="text-xs-center"
@@ -134,9 +134,7 @@ export default {
         )
         data.blocks.forEach(block => {
           block.time = moment(block.time).format('MMMM Do YYYY, h:mm:ss a')
-          block.transactionsCount = block.Transactions.length
         })
-
         setTimeout(() => {
           this.paginationLoading = false
           resolve({ blocks: data.blocks, total: data.totalBlocksCount })
