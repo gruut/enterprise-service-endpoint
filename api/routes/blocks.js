@@ -12,7 +12,7 @@ function addTxCountProperty (blocks) {
           'blockId': block.id
         }
       })
-      
+
       return Object.assign({}, block.dataValues, { transactionCount: count })
     })
 
@@ -24,11 +24,13 @@ function addTxCountProperty (blocks) {
 router.get('/blocks', async (req, res) => {
   try {
     let blocks = null
+    let totalBlocksCount = 0
     if (_.isEmpty(req.query.height)) {
       const page = parseInt(req.query.page)
       const rows = parseInt(req.query.rows)
       const offset = (page - 1) * rows
 
+      totalBlocksCount = await Block.count()
       blocks = await Block.findAll({
         order: [
           ['time', 'DESC']
@@ -36,7 +38,6 @@ router.get('/blocks', async (req, res) => {
         limit: rows,
         offset
       })
-
       blocks = await addTxCountProperty(blocks)
     } else {
       const { height } = req.query
@@ -51,7 +52,7 @@ router.get('/blocks', async (req, res) => {
     }
     res.json({
       blocks,
-      totalBlocksCount: blocks.length
+      totalBlocksCount
     })
   } catch (err) {
     res.sendStatus(500)
