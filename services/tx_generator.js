@@ -8,7 +8,7 @@ const { Key } = require('../models')
 
 const MSG_TX = 0xB1
 const TRANSACTION_ID_SIZE = 32
-const REQUESTER_ID_SIZE = 8
+const REQUESTER_ID_SIZE = 12
 
 const TX_PROTO_PATH = Path.join(__dirname, '../protos/tx.proto')
 const LOAD_ARGS = {
@@ -112,7 +112,7 @@ class TxGenerator {
 
     transaction.txid = hash(crypto.randomBytes(TRANSACTION_ID_SIZE), 'base64')
     transaction.time = utils.getTimestamp()
-    transaction.rID = Buffer.from(content['rID']).toString('base64', 0, REQUESTER_ID_SIZE)
+    transaction.rID = Buffer.from(process.env.MY_ID).toString('base64', 0, REQUESTER_ID_SIZE)
     transaction.type = 'DIGESTS'
     transaction.content = Object.values(content)
 
