@@ -1,5 +1,7 @@
 const {
-  Block
+  Block,
+  Transaction,
+  RequestData
 } = require('../models')
 
 class Seed {
@@ -14,6 +16,24 @@ class Seed {
       height: 1,
       txRoot: 'dCc8MsxGDMpc1QEKmt/7EK8l8IcOe9owKwSwCenFvw4=',
       mergerId: 'TUVSR0VSLTE='
+    })
+      .catch(e => console.log(e))
+  }
+
+  static async sampleRequestData () {
+    const tx = await this.sampleTransaction()
+    return RequestData.create({
+      requesterId: 'test',
+      data: 'test',
+      transactionId: tx.transactionId
+    })
+  }
+
+  static async sampleTransaction () {
+    const block = await this.sampleBlock()
+    return Transaction.create({
+      transactionId: 'dSupNe0rqGpXKdvnQFB3pvtAHxvj3pUsJSGN3UbDWWc=',
+      blockId: block.id
     })
       .catch(e => console.log(e))
   }
