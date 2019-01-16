@@ -3,7 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 // set global variable
 try {
-  Cert.generateKeyPair()
+  if (process.env.NODE_ENV === 'production') { Cert.generateKeyPair() }
 } catch (e) {
   process.exit(1)
 }

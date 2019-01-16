@@ -21,13 +21,15 @@ function addTxCountProperty (blocks) {
 }
 
 /* GET Blocks listing. */
+const DEFAULT_PAGE = 1
+const DEFAULT_ROWS = 5
 router.get('/blocks', async (req, res) => {
   try {
     let blocks = null
     let totalBlocksCount = 0
     if (_.isEmpty(req.query.height)) {
-      const page = parseInt(req.query.page)
-      const rows = parseInt(req.query.rows)
+      const page = parseInt(req.query.page) || DEFAULT_PAGE
+      const rows = parseInt(req.query.rows) || DEFAULT_ROWS
       const offset = (page - 1) * rows
 
       totalBlocksCount = await Block.count()
@@ -96,9 +98,10 @@ router.get('/blocks/:id', async (req, res) => {
 })
 
 /* POST handle MSG_HEADER */
-router.post('/blocks', bodyParser.urlencoded({extended: false}), (req, res) => {
+router.post('/blocks', bodyParser.urlencoded({extended: false}), async (req, res) => {
   try {
-    _.go(req.body['message'],
+    let result = false
+    result = await _.go(req.body['message'],
       (message) => {
         return JSON.parse(message).blockraw
       },
@@ -137,9 +140,14 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), (req, res) => {
           })
         })
         await Transaction.bulkCreate(transactions)
+
+        return true
       }
     )
-    res.sendStatus(200)
+
+    if (result === true) { res.sendStatus(200) } else {
+      res.sendStatus(400)
+    }
   } catch (err) {
     res.sendStatus(500)
     throw err

@@ -43,8 +43,6 @@ class Cert {
           })
         }
       }).catch((err) => {
-        // TODO: log
-        console.log(err)
         throw err
       })
     }
