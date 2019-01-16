@@ -47,8 +47,10 @@ module.exports = (sequelize, DataTypes) => {
   })
   block.associate = function (models) {
     // associations can be defined here
-    block.hasMany(models.Transaction)
-    block.hasMany(models.Signer)
+    block.hasMany(models.Transaction, {foreignKey: 'blockId'})
+    block.hasMany(models.Signer, {
+      foreignKey: 'blockId'
+    })
   }
 
   return block

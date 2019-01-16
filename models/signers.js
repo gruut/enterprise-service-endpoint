@@ -11,13 +11,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(400)
     },
     blockId: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   },
   {})
   Signer.associate = (models) => {
     // associations can be defined here
-    Signer.belongsTo(models.Block)
+    Signer.belongsTo(models.Block, {
+      foreignKey: 'blockId'
+    })
   }
 
   return Signer

@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     blockId: {
-      type: DataTypes.INTEGER
+      type: DataTypes.INTEGER,
+      allowNull: false
     },
     createdAt: {
       allowNull: false,
@@ -23,7 +24,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {})
   Transaction.associate = function (models) {
     // associations can be defined here
-    Transaction.belongsTo(models.Block)
+    Transaction.belongsTo(models.Block, {
+      foreignKey: 'blockId'
+    })
   }
 
   return Transaction
