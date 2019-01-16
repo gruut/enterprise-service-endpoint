@@ -59,24 +59,24 @@ export default {
       })
   },
   mounted () {
-    this.pushTxIntoItem(this.transaction, this.requestData)
+    this.pushTxIntoItem()
   },
   methods: {
-    pushTxIntoItem (tx, requestData) {
+    pushTxIntoItem () {
       this.items.push({
         title: '트랜잭션 ID',
-        value: tx.transactionId
+        value: this.transaction.transactionId
       })
 
-      if (requestData) {
-        this.items.concat([
+      if (this.requestData) {
+        this.items = this.items.concat([
           {
             title: '작성자',
-            value: requestData.requesterId
+            value: this.requestData.requesterId
           },
           {
             title: '메세지',
-            value: requestData.data
+            value: this.requestData.data
           }
         ])
       }
