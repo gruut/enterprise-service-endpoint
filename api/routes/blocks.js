@@ -63,6 +63,8 @@ router.get('/blocks', async (req, res) => {
 })
 
 /* GET Block by ID. */
+const DEFAULT_TRANSACTION_PAGE = 1
+const DEFAULT_TRANSACTION_ROWS = 5
 router.get('/blocks/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id)
@@ -73,7 +75,19 @@ router.get('/blocks/:id', async (req, res) => {
       })
 
     if (block) {
-      const transactions = await Transaction.findAll({where: {blockId: block.id}})
+      const page = parseInt(req.query.tx_page) || DEFAULT_TRANSACTION_PAGE
+      const rows = parseInt(req.query.tx_rows) || DEFAULT_TRANSACTION_ROWS
+      const offset = (page - 1) * rows
+
+      const transactions = await Transaction.findAll({
+        where: { blockId: block.id },
+        limit: rows,
+        offset
+      }
+      )
+      const transactionsCount = await Transaction.count({
+        where: {blockId: block.id}
+      })
       let txIds = _.pluck(transactions, 'transactionId')
       if (req.params.tx_id) {
         txIds = _.filter(txIds, (txId) => txId === req.params.tx_id)
@@ -86,7 +100,8 @@ router.get('/blocks/:id', async (req, res) => {
         block,
         transactions,
         signers,
-        requestData
+        requestData,
+        transactionsCount
       })
     } else {
       res.sendStatus(400)
