@@ -107,10 +107,6 @@ export default {
     }
   },
   mounted () {
-    this.getBlocksFromApi().then(data => {
-      this.blocks = data.blocks
-      this.totalItemsCount = data.total
-    })
     this.timer = setInterval(this.checkNewBlock, 5000)
   },
   watch: {
@@ -118,7 +114,7 @@ export default {
       handler () {
         this.getBlocksFromApi().then(data => {
           this.blocks = data.blocks
-          this.totalItemsCount = data.total
+          this.totalItemsCount = data.totalBlocksCount
         })
       },
       deep: true
@@ -137,12 +133,13 @@ export default {
         })
         setTimeout(() => {
           this.paginationLoading = false
-          resolve({ blocks: data.blocks, total: data.totalBlocksCount })
+          resolve({ blocks: data.blocks, totalBlocksCount: data.totalBlocksCount })
         }, 1000)
       })
     },
     checkNewBlock: async function () {
-      const newBlocks = (await this.getBlocksFromApi()).blocks
+      const data = await this.getBlocksFromApi()
+      const newBlocks = data.blocks
 
       _.go(
         newBlocks,
@@ -161,6 +158,7 @@ export default {
             if (newBlockIndex !== -1) {
               newBlocks[newBlockIndex].isActive = true
               this.blocks = newBlocks
+              this.totalItemsCount = data.totalBlocksCount
             }
           })
         }

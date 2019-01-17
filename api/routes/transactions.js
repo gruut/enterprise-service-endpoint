@@ -40,11 +40,11 @@ router.get('/transactions', async (req, res) => {
 router.get('/transactions/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id)
-    const transaction = await Transaction.findById(id)
+    const transaction = await Transaction.findByPk(id)
     const requestData = await RequestData.findOne({where: {
       transactionId: transaction.transactionId
     }})
-    const block = await Block.findById(transaction.blockId, {
+    const block = await Block.findByPk(transaction.blockId, {
       include: [Signer]
     })
 
