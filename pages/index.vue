@@ -20,24 +20,27 @@
       </template>
       <template slot="items" slot-scope="{ item }">
         <td
-          class="explorer_body__table_cell--id"
           :class="{'explorer_body__table_cell--new': item.isActive}"
+          class="text-xs-center"
         >
           <nuxt-link
-            :to="{ name: 'blocks-id', params: { id: item.id }}"
-            class="explorer_body__table_cell explorer_body__table_cell--link"
-          >{{ item.blockId }}</nuxt-link>
+              :to="{ name: 'blocks-id', params: { id: item.id }}"
+              class="explorer_body__table_cell explorer_body__table_cell--link"
+          >{{ item.height }}
+          </nuxt-link>
         </td>
-        <td :class="{'explorer_body__table_cell--new': item.isActive}" class="text-xs-center">{{ item.transactionCount }}</td>
         <td
           :class="{'explorer_body__table_cell--new': item.isActive}"
           class="text-xs-center"
         >{{ item.time }}</td>
-      
+        <td :class="{'explorer_body__table_cell--new': item.isActive}" class="text-xs-center">{{ item.transactionCount }}</td>
+        <td :class="{'explorer_body__table_cell--new': item.isActive}" class="text-xs-center">{{ item.mergerId }}</td>
         <td
+          class="explorer_body__table_cell--id"
           :class="{'explorer_body__table_cell--new': item.isActive}"
-          class="text-xs-center"
-        >{{ item.height }}</td>
+        >
+          {{ item.blockId }}
+        </td>
       </template>
       <template slot="no-data">
         <v-alert :value="true" icon="warning">Sorry, nothing to display</v-alert>
@@ -80,28 +83,31 @@ export default {
       rowsPerPageItems: [5, 10, 20, 30],
       headers: [
         {
-          text: 'Block ID',
-          align: 'center',
+          text: 'Block Height',
           sortable: false,
-          value: 'blockId'
+          value: 'height',
+          align: 'center'
+        },
+        {
+          text: 'Block 생성시간',
+          sortable: false,
+          value: 'createdAt',
+          align: 'center'
         },
         {
           text: 'Transaction 개수',
           sortable: false,
-          align: 'center',
-          value: 'version'
+          align: 'center'
         },
         {
-          text: 'Block 생성시간',
-          sortable: true,
-          align: 'center',
-          value: 'createdAt'
+          text: 'Merger ID',
+          sortable: false,
+          align: 'center'
         },
         {
-          text: 'Block Height',
-          sortable: true,
-          align: 'center',
-          value: 'height'
+          text: 'Block ID',
+          sortable: false,
+          align: 'center'
         }
       ]
     }
@@ -129,7 +135,9 @@ export default {
           `/api/blocks/?page=${page}&rows=${rowsPerPage}`
         )
         data.blocks.forEach(block => {
-          block.time = moment(block.time).format('MMMM Do YYYY, h:mm:ss a')
+          let time = moment(block.time).format('MMMM Do YYYY, h:mm:ss a')
+          time += ` (${moment(block.time).fromNow()})`
+          block.time = time
         })
         setTimeout(() => {
           this.paginationLoading = false
@@ -226,7 +234,6 @@ $break-small: 600px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-family: monospace
 }
 
 .explorer_body__blocks_index {
@@ -328,6 +335,7 @@ $break-small: 600px;
 
 .explorer_body__table_cell--id {
   text-align: center;
+  font-family: monospace;
 }
 
 .explorer_body__table_bottom_text--white {
