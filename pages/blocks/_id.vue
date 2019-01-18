@@ -18,8 +18,6 @@
 
         <v-flex slot="item" slot-scope="props" xs12 sm6 md4 lg4>
           <v-card>
-            <v-card-title>{{ props.item.name }}</v-card-title>
-            <v-divider></v-divider>
             <v-list>
               <v-list-tile>ID:
                 <v-list-tile-content class="transaction_info__message">
@@ -134,7 +132,6 @@ export default {
         )
 
         let txDatum = {
-          name: `Transaction`,
           id: tx.id,
           tx_id: tx.transactionId
         }
