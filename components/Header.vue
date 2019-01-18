@@ -53,7 +53,7 @@
     color: #F5F5F5;
     text-decoration: none;
     font-weight: bold;
-    font-family: "Ubuntu", sans-serif;
+    font-family: "Ubuntu", monospace;
 
     @media screen and (max-width: $break-small) {
       width: 60%;

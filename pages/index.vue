@@ -194,7 +194,7 @@ $break-small: 600px;
   align-items: center;
   justify-content: center;
 
-  font-family: "Ubuntu", sans-serif;
+  font-family: "Ubuntu", monospace;
 }
 
 .explorer_body__table_row {
@@ -226,6 +226,7 @@ $break-small: 600px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: monospace
 }
 
 .explorer_body__blocks_index {
@@ -306,7 +307,6 @@ $break-small: 600px;
 .explorer_body__table_title_text {
   color: $green;
   font-size: 1.7rem;
-  font-family: "Source Sans Pro", sans-serif;
   font-weight: 600;
 
   @media screen and (max-width: $break-small) {

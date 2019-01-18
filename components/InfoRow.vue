@@ -25,7 +25,7 @@
           </v-card-text>
         </v-flex>
         <v-flex xs5>
-          <v-card-text>
+          <v-card-text class="info__value_text">
             <slot name="value"></slot>
           </v-card-text>
         </v-flex>
@@ -48,5 +48,9 @@
   .info__value--mobile {
     font-size: 10px;
     word-break: break-all;
+  }
+
+  .info__value_text {
+    font-family: 'Courier', monospace
   }
 </style>

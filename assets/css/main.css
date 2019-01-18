@@ -3,7 +3,7 @@ html, body
   background-color: #fff;
   color: #000;
   letter-spacing: 0.5px;
-  font-family: "Ubuntu", sans-serif;
+  font-family: "Ubuntu", monospace;
   height: 100vh;
   margin: 0;
 }
