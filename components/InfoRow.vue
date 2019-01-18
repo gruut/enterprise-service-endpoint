@@ -24,7 +24,7 @@
             <slot name="title"></slot>
           </v-card-text>
         </v-flex>
-        <v-flex xs5>
+        <v-flex xs7>
           <v-card-text class="info__value_text">
             <slot name="value"></slot>
           </v-card-text>
@@ -51,6 +51,6 @@
   }
 
   .info__value_text {
-    font-family: 'Courier', monospace
+    font-family: 'Consolas', monospace
   }
 </style>

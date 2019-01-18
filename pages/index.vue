@@ -24,7 +24,7 @@
           class="text-xs-center"
         >
           <nuxt-link
-              :to="{ name: 'blocks-id', params: { id: item.id }}"
+              :to="{ name: 'blocks-id', params: { id: item.height }}"
               class="explorer_body__table_cell explorer_body__table_cell--link"
           >{{ item.height }}
           </nuxt-link>
@@ -335,7 +335,7 @@ $break-small: 600px;
 
 .explorer_body__table_cell--id {
   text-align: center;
-  font-family: monospace;
+  font-family: 'Consolas', monospace;
 }
 
 .explorer_body__table_bottom_text--white {

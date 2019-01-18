@@ -62,15 +62,15 @@ router.get('/blocks', async (req, res) => {
   }
 })
 
-/* GET Block by ID. */
+/* GET Block by ID(Height). */
 const DEFAULT_TRANSACTION_PAGE = 1
 const DEFAULT_TRANSACTION_ROWS = 5
 router.get('/blocks/:id', async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
+    const height = parseInt(req.params.id)
     const block = await Block.findOne(
       {
-        where: {id},
+        where: {height},
         attributes: {exclude: ['createdAt', 'updatedAt']}
       })
 
