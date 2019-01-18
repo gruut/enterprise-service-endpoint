@@ -48,12 +48,13 @@ export default {
       this.items.push({ title: '버전', value: block.version })
       this.items.push({
         title: '생성시간',
-        value: this.changeTimezone(block.time)
+        value: this.formatTime(block.time)
       })
       this.items.push({ title: '서명자 수', value: block.signersCount })
     },
-    changeTimezone: time => {
-      return moment.tz(time, 'Asia/Seoul').format('MMMM Do YYYY, h:mm:ss a')
+    formatTime: time => {
+      let formattedTime = `${moment.tz(time, 'Asia/Seoul').format('MMMM Do YYYY, h:mm:ss a')} (${moment(time).fromNow()})`
+      return formattedTime
     }
   }
 }
