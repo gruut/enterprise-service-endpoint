@@ -59,7 +59,7 @@ router.get('/blocks', async (req, res) => {
       }
     } else {
       const { keyword } = req.query
-      const block = await Block.findOne({
+      const searchedBlocks = await Block.findAll({
         where: {
           [Op.or]: [
             {
@@ -76,8 +76,8 @@ router.get('/blocks', async (req, res) => {
         }
       })
 
-      if (block) {
-        blocks = [block]
+      if (searchedBlocks) {
+        blocks = searchedBlocks
       }
     }
     res.json({
