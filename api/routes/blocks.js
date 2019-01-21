@@ -1,5 +1,13 @@
 const {Router} = require('express')
-const {Block, Signer, Transaction, RequestData} = require('../../models')
+const {
+  Block,
+  Signer,
+  Transaction,
+  RequestData,
+  sequelize: {
+    Op
+  }
+} = require('../../models')
 const bodyParser = require('body-parser')
 const router = Router()
 const _ = require('../../plugins/partial')
@@ -21,15 +29,13 @@ function addTxCountProperty (blocks) {
 }
 
 /* GET Blocks listing. */
-const DEFAULT_PAGE = 1
-const DEFAULT_ROWS = 5
 router.get('/blocks', async (req, res) => {
   try {
     let blocks = null
     let totalBlocksCount = 0
-    if (_.isEmpty(req.query.height)) {
-      const page = parseInt(req.query.page) || DEFAULT_PAGE
-      const rows = parseInt(req.query.rows) || DEFAULT_ROWS
+    if (req.query.page && req.query.rows) {
+      const page = parseInt(req.query.page)
+      const rows = parseInt(req.query.rows)
       const offset = (page - 1) * rows
 
       totalBlocksCount = await Block.count()
@@ -41,11 +47,33 @@ router.get('/blocks', async (req, res) => {
         offset
       })
       blocks = await addTxCountProperty(blocks)
-    } else {
+    } else if (req.query.height) {
       const { height } = req.query
       const block = await Block.findOne({
         where: {height},
         include: [Transaction]
+      })
+
+      if (block) {
+        blocks = [block]
+      }
+    } else {
+      const { keyword } = req.query
+      const block = await Block.findOne({
+        where: {
+          [Op.or]: [
+            {
+              height: {
+                [Op.like]: `%${keyword}%`
+              }
+            },
+            {
+              blockId: {
+                [Op.like]: `%${keyword}%`
+              }
+            }
+          ]
+        }
       })
 
       if (block) {

@@ -4,7 +4,7 @@
   >
     <div class="explorer_parallax__container">
       <video class="explorer_parallax__video" autoplay loop muted>
-        <source type="video/mp4" src="../static/main_video.mp4"></source>
+        <source type="video/mp4" src="../static/main_video.mp4"/>
       </video>
       <div
         class="explorer_parallax__heading"
