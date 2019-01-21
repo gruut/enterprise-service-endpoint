@@ -51,7 +51,8 @@
         ※ 주의 : 테스트넷에 저장된 데이터는 테스트 도중 또는 완료 후에 삭제될 수도 있습니다. 구글 플레이스토어에서
         <a
           class="explorer_body__table_bottom_text--white"
-          href="#"
+          href="https://play.google.com/store/apps/details?id=com.gruutnetworks.gruutsigner"
+          target="_blank"
         >'Gruut Signer'</a>를 받아 서명자로도 참여해보세요.
       </div>
     </v-bottom-nav>
