@@ -10,7 +10,7 @@
     "start": "nuxt build && nuxt start --env",
     "prod": "pm2 start npm --name 'gruut-enterprise-webserver' --output '/dev/null' -- start",
     "precommit": "npm run lint",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint": "eslint --ext .js,.vue .",
     "test": "mocha test/**/*.js --exit"
   },
   "config": {

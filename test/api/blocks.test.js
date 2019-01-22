@@ -68,7 +68,7 @@ describe('Block API', () => {
 
             expect(res.status).to.be.equal(200)
             expect(res.body.blocks.length).to.be.equal(1)
-            expect(res.body.totalBlocksCount).to.be.equal(0)
+            expect(res.body.totalBlocksCount).to.be.equal(2)
 
             done()
           })
@@ -82,7 +82,7 @@ describe('Block API', () => {
     it('should return a specific block', (done) => {
       Seed.sampleBlock().then((block) => {
         chai.request(server)
-          .get(`/blocks/${block.id}`)
+          .get(`/blocks/${block.height}`)
           .end((err, res) => {
             if (err) throw err
 

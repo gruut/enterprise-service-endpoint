@@ -24,10 +24,12 @@ app.use(urlencodedParser)
 // Require API routes
 const blocks = require('./routes/blocks')
 const transactions = require('./routes/transactions')
+const action = require('./routes/action')
 
 // Import API Routes
 app.use(blocks)
 app.use(transactions)
+app.use(action)
 
 // Export the server middleware
 module.exports = {

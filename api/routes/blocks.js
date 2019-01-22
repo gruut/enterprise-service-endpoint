@@ -32,13 +32,13 @@ function addTxCountProperty (blocks) {
 router.get('/blocks', async (req, res) => {
   try {
     let blocks = null
-    let totalBlocksCount = 0
+    const totalBlocksCount = await Block.count()
+
     if (req.query.page && req.query.rows) {
       const page = parseInt(req.query.page)
       const rows = parseInt(req.query.rows)
       const offset = (page - 1) * rows
 
-      totalBlocksCount = await Block.count()
       blocks = await Block.findAll({
         order: [
           ['time', 'DESC']
@@ -76,8 +76,10 @@ router.get('/blocks', async (req, res) => {
         }
       })
 
-      if (searchedBlocks) {
+      if (searchedBlocks.length > 0) {
         blocks = searchedBlocks
+      } else {
+        blocks = await Block.findAll()
       }
     }
     res.json({
