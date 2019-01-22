@@ -1,0 +1,25 @@
+services:
+  - docker
+notifications:
+  email: false
+language: node_js
+node_js: '10'
+cache: npm
+os: linux
+before_install:
+  - docker pull doscode/gruut-nodejs:latest
+  - docker run --name gruut-service-endpoint -e MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD -d doscode/gruut-nodejs:latest
+script:
+  - docker exec gruut-service-endpoint sh -c "
+    mkdir -p workspace && cd workspace;
+    pwd;
+    git clone --branch=master https://github.com/gruut/enterprise-service-endpoint.git;
+    cd enterprise-service-endpoint;
+    rm -f package-lock.json;
+    npm install;
+    cp /etc/.se.env .env;
+    sequelize db:create --env test;
+    sequelize db:migrate --env test;
+    npm run lint;
+    npm run test;
+    "
