@@ -1,7 +1,8 @@
 # GRUUT SERVICE ENDPOINT
-[![Build Status](https://travis-ci.org/gruut/enterprise-service-endpoint.svg?branch=master)](https://travis-ci.org/gruut/enterprise-service-endpoint)
+
 'Gruut service endpoint' helps you make transactions and find specific block and transaction.
 
+[![Build Status](https://travis-ci.org/gruut/enterprise-service-endpoint.svg?branch=master)](https://travis-ci.org/gruut/enterprise-service-endpoint)
 ## Requirements
 
 * Node ≥ v10.11.0
