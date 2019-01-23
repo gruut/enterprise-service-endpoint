@@ -47,16 +47,6 @@ router.get('/blocks', async (req, res) => {
         offset
       })
       blocks = await addTxCountProperty(blocks)
-    } else if (req.query.height) {
-      const { height } = req.query
-      const block = await Block.findOne({
-        where: {height},
-        include: [Transaction]
-      })
-
-      if (block) {
-        blocks = [block]
-      }
     } else {
       const { keyword } = req.query
       const searchedBlocks = await Block.findAll({
@@ -134,7 +124,7 @@ router.get('/blocks/:id', async (req, res) => {
         transactionsCount
       })
     } else {
-      res.sendStatus(400)
+      res.sendStatus(404)
     }
   } catch (err) {
     res.sendStatus(500)

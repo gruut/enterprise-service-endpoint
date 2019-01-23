@@ -55,7 +55,7 @@ router.get('/transactions/:id', async (req, res) => {
         block
       })
     } else {
-      res.sendStatus(400)
+      res.sendStatus(404)
     }
   } catch (e) {
     res.sendStatus(500)

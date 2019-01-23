@@ -58,24 +58,6 @@ describe('Block API', () => {
           done()
         })
     })
-
-    it('should find and return blocks', (done) => {
-      Seed.sampleBlock().then(() => {
-        chai.request(server)
-          .get('/blocks/?height=1')
-          .end((err, res) => {
-            if (err) throw err
-
-            expect(res.status).to.be.equal(200)
-            expect(res.body.blocks.length).to.be.equal(1)
-            expect(res.body.totalBlocksCount).to.be.equal(2)
-
-            done()
-          })
-      }).catch(e => {
-        done(e)
-      })
-    })
   })
 
   describe('GET :id', () => {
