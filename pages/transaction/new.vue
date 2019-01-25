@@ -64,6 +64,9 @@
                     <v-btn flat color="#00937B">생성된 블록 보기</v-btn>
                   </nuxt-link>
                 </v-card-text>
+                <v-card-text v-if="isFailedToSendTx">
+                  <v-btn flat color="#00937B" @click="resendTransaction">다시 보내기</v-btn>
+                </v-card-text>
               </v-slide-y-transition>
             </v-card>
           </v-flex>
@@ -101,7 +104,9 @@ export default {
       cardTitle: 'Block 생성 대기중입니다.',
       requestTransactionId: '',
       blockId: '',
-      txId: ''
+      txId: '',
+      requestData: null,
+      isFailedToSendTx: false
     }
   },
   methods: {
@@ -122,16 +127,18 @@ export default {
       const nameElem = document.getElementById(
         'form_container__input_field_name'
       )
+      this.requestData = {
+        requesterId: nameElem.value,
+        message: textareaElem.value
+      }
+
       axios.defaults.headers = {
         'Content-Type': 'application/x-www-form-urlencoded'
       }
       axios
         .post(
           '/api/transactions',
-          queryString.stringify({
-            requesterId: nameElem.value,
-            message: textareaElem.value
-          })
+          queryString.stringify(this.requestData)
         )
         .then(res => {
           if (res.status === 200) {
@@ -139,7 +146,26 @@ export default {
             this.queryAndIndeterminate()
 
             this.requestTransactionId = res.data.transactionId
-          } else {
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    resendTransaction: function () {
+      this.isFailedToSendTx = false
+
+      axios.defaults.headers = {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+      axios
+        .post(
+          '/api/transactions',
+          queryString.stringify(this.requestData)
+        )
+        .then(res => {
+          if (res.status === 200) {
+            this.queryAndIndeterminate()
           }
         })
         .catch(err => {
@@ -166,6 +192,7 @@ export default {
                   this.blockId = res.data[0].blockId
                   this.txId = res.data[0].id
                   this.cardTitle = 'Block이 생성되었습니다.'
+                  this.requestData = null
                 }
               })
               .catch(e => {
@@ -180,6 +207,9 @@ export default {
             clearInterval(this.msgHeaderChecker)
             if (!this.receivedBlock) {
               this.cardTitle = 'Block이 생성되지 않았습니다.'
+              this.isFailedToSendTx = true
+            } else {
+              this.isFailedToSendTx = false
             }
 
             return
