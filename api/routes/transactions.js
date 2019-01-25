@@ -4,7 +4,6 @@ const bodyParser = require('body-parser')
 const {Block, RequestData, Transaction, Signer} = require('../../models')
 const TxGenerator = require('../../services/tx_generator')
 const router = Router()
-const debug = require('debug')('app:demo')
 const _ = require('partial-js')
 
 router.get('/transactions', async (req, res) => {
@@ -90,11 +89,9 @@ router.post('/transactions', bodyParser.urlencoded({extended: false}), async (re
         transactionId: requestData.transactionId
       })
     } else {
-      res.sendStatus(500)
+      throw new Error('TxGenerator failed to generate a transaction')
     }
   } catch (err) {
-    // TODO: log
-    debug(err)
     res.sendStatus(500)
     throw err
   }

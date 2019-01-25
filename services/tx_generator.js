@@ -80,17 +80,8 @@ class TxGenerator {
         (msg) => {
           _.each(this.clients, (client) => {
             client.transaction(msg, async function (err, res) {
-              // TODO: logger
               if (err) {
-                console.group()
-                console.log(`MergerInfo: ${client}`)
-                console.error(`Response from Merger: ${err}`)
-                console.groupEnd()
-              } else {
-                console.group()
-                console.log(`MergerInfo: ${client}`)
-                console.log(`Response from Merger: ${res.message}`)
-                console.groupEnd()
+                return false
               }
             })
           })
@@ -101,9 +92,7 @@ class TxGenerator {
 
       return result
     } catch (e) {
-      // TODO: logger
-      console.log(e)
-      return false
+      throw e
     }
   }
 

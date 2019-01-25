@@ -96,7 +96,7 @@ export default {
           this.txContainer = []
           const { requestData, transactions, transactionsCount } = data
           this.totalItemsCount = transactionsCount
-          this.pushTransactionsIntoContainer(transactions, requestData)
+          this.pushTransactionsIntoContainer({transactions, requestData})
         })
       },
       deep: true
@@ -124,7 +124,7 @@ export default {
       })
     },
 
-    pushTransactionsIntoContainer (transactions, requestData) {
+    pushTransactionsIntoContainer ({transactions, requestData}) {
       _.each(transactions, tx => {
         const datum = _.find(
           requestData,
