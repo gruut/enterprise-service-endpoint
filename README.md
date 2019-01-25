@@ -48,5 +48,5 @@ $ sequelize db:migrate
 
 ### 3. Run
 ```shell
-$ npm run prod // npm run dev(dev env)
+$ npm run prod or npm run dev(on development environment)
 ```
