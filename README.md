@@ -44,5 +44,9 @@ MY_ID="GENTSE-1"
 $ npm install
 $ sequelize db:create
 $ sequelize db:migrate
-$ npm run prod
+```
+
+### 3. Run
+```shell
+$ npm run prod // npm run dev(dev env)
 ```
