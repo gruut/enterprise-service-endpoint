@@ -158,19 +158,17 @@ export default {
 
           return _.difference(newBlockHeights, oldBlockHeights)
         },
-        newHeights => {
-          _.each(newHeights, h => {
-            const newBlockIndex = _.findIndex(newBlocks, b => {
-              return b.height === h
-            })
-
-            if (newBlockIndex !== -1) {
-              newBlocks[newBlockIndex].isActive = true
-              this.blocks = newBlocks
-              this.totalItemsCount = data.totalBlocksCount
-            }
+        _.each(newBlockHeight => {
+          const newBlockIndex = _.findIndex(newBlocks, b => {
+            return b.height === newBlockHeight
           })
-        }
+
+          if (newBlockIndex !== -1) {
+            newBlocks[newBlockIndex].isActive = true
+            this.blocks = newBlocks
+            this.totalItemsCount = data.totalBlocksCount
+          }
+        })
       )
     }
   },

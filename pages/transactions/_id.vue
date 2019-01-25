@@ -44,13 +44,13 @@ export default {
     return axios
       .get('/api/transactions/' + params.id)
       .then(res => {
-        const receivedData = res.data
-        receivedData.block.signersCount = receivedData.block.Signers.length
+        const {data} = res
+        data.block.signersCount = data.block.Signers.length
 
         return {
-          transaction: receivedData.transaction,
-          requestData: receivedData.requestData,
-          block: receivedData.block
+          transaction: data.transaction,
+          requestData: data.requestData,
+          block: data.block
         }
       })
       .catch(e => {

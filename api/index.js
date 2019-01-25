@@ -10,10 +10,11 @@ try {
 
 // Create express instance
 const app = express()
-var jsonParser = bodyParser.json({limit: 1024 * 1024 * 10, type: 'application/json'})
+const maxResponseSize = 1024 * 1024 * 10
+var jsonParser = bodyParser.json({limit: maxResponseSize, type: 'application/json'})
 var urlencodedParser = bodyParser.urlencoded({
   extended: true,
-  limit: 1024 * 1024 * 10,
+  limit: maxResponseSize,
   type: 'application/x-www-form-urlencoded',
   parameterLimit: 10000
 })

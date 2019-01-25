@@ -108,9 +108,11 @@ export default {
     sendTransaction: function () {
       this.$v.$touch()
       if (this.nameErrors.length > 0) {
+        alert('닉네임이 10자를 초과했습니다.')
         return
       }
       if (this.messageErrors.length > 0) {
+        alert('메세지가 100자를 초과했습니다.')
         return
       }
 
@@ -133,17 +135,14 @@ export default {
         )
         .then(res => {
           if (res.status === 200) {
-            alert('요청이 처리되었습니다.')
             this.transactionSent = true
             this.queryAndIndeterminate()
 
             this.requestTransactionId = res.data.transactionId
           } else {
-            alert('요청이 처리되지 못했습니다.')
           }
         })
         .catch(err => {
-          alert('요청이 처리되지 못했습니다.')
           console.log(err)
         })
     },
