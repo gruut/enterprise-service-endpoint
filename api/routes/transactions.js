@@ -28,7 +28,7 @@ router.get('/transactions', async (req, res) => {
       const transaction = await Transaction.findOne({
         where: {
           transactionId: {
-            [Op.like]: `%${transactionId}%`
+            [Op.like]: `${transactionId}%`
           }
         }
       })
