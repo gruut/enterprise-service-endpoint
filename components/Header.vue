@@ -4,12 +4,26 @@
     <router-link to="/" class="explorer_header__title">
       <v-toolbar-title v-text="title"></v-toolbar-title>
     </router-link>
+    <v-select
+      v-model="selection"
+      :items="selections"
+      solo
+      background-color="transparent"
+      color="black"
+    ></v-select>
     <div class="explorer_header__search_bar">
-      <v-autocomplete v-model="select" :search-input.sync="search" :items="blocks" class="mx-3" flat solo-inverted hide-details hide-no-data item-text="idAndHeight" label="Block ID, Height" return-object>
+     <v-autocomplete v-if="isBlockSearch" v-model="selectForBlock" :search-input.sync="searchForBlock" :items="blocks" class="mx-3" flat solo-inverted hide-details hide-no-data item-text="idAndHeight" label="Block ID, Height" return-object>
         <template slot="item" slot-scope="{ item }">
           <v-list-tile-content v-if="blocks.length > 0">
             <v-list-tile-sub-title v-text="`ID: ${item.blockId}`"></v-list-tile-sub-title>
             <v-list-tile-sub-title v-text="`Height: ${item.height}`"></v-list-tile-sub-title>
+          </v-list-tile-content>
+        </template>
+      </v-autocomplete>
+      <v-autocomplete v-else v-model="selectForTransaction" :search-input.sync="searchForTransaction" :items="transactions" class="mx-3" flat solo-inverted hide-details hide-no-data item-text="transactionId" label="Transaction ID" return-object>
+        <template slot="item" slot-scope="{ item }">
+          <v-list-tile-content v-if="transactions.length > 0">
+            <v-list-tile-sub-title v-text="`Transaction ID: ${item.transactionId}`"></v-list-tile-sub-title>
           </v-list-tile-content>
         </template>
       </v-autocomplete>
@@ -29,18 +43,34 @@ export default {
   data () {
     return {
       blocks: [],
-      select: null,
-      search: null,
+      transactions: [],
+      selectForBlock: null,
+      searchForBlock: null,
+      searchForTransaction: null,
+      selectForTransaction: null,
       blockHeight: '',
-      title: 'Gruut Enterprise Network'
+      title: 'Gruut Enterprise Network',
+      selections: ['Block', 'Transaction'],
+      selection: 'Block'
+    }
+  },
+  computed: {
+    isBlockSearch () {
+      return this.selection === 'Block'
     }
   },
   watch: {
-    search (val) {
+    searchForBlock (val) {
       val && this.queryBlocks(val)
     },
-    select (val) {
+    selectForBlock (val) {
       this.$router.push(`/blocks/${val.height}`)
+    },
+    searchForTransaction (val) {
+      val && this.queryTransactions(val)
+    },
+    selectForTransaction (val) {
+      this.$router.push(`/transactions/${val.id}`)
     }
   },
   methods: {
@@ -60,6 +90,20 @@ export default {
             block.link = `blocks/${block.height}`
             block.idAndHeight = `ID: ${block.blockId} - Height: ${block.height}`
           })
+        }
+      } catch (error) {
+        console.log('error :', error)
+      }
+    },
+    async queryTransactions (transactionId) {
+      try {
+        const query = queryString.stringify({
+          transactionId
+        })
+
+        const res = await axios.get(`/api/transactions/?${query}`)
+        if (res.status === 200) {
+          this.transactions = res.data
         }
       } catch (error) {
         console.log('error :', error)
