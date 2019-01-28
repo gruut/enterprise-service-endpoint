@@ -1,7 +1,15 @@
 const {Router} = require('express')
 const crypto = require('crypto')
 const bodyParser = require('body-parser')
-const {Block, RequestData, Transaction, Signer} = require('../../models')
+const {
+  Block,
+  RequestData,
+  Transaction,
+  Signer,
+  sequelize: {
+    Op
+  }
+} = require('../../models')
 const TxGenerator = require('../../services/tx_generator')
 const router = Router()
 const _ = require('partial-js')
@@ -19,7 +27,9 @@ router.get('/transactions', async (req, res) => {
       const { transactionId } = req.query
       const transaction = await Transaction.findOne({
         where: {
-          transactionId
+          transactionId: {
+            [Op.like]: `%${transactionId}%`
+          }
         }
       })
 
