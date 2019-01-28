@@ -51,17 +51,14 @@ router.get('/blocks', async (req, res) => {
       const { keyword } = req.query
       const searchedBlocks = await Block.findAll({
         where: {
-          [Op.or]: [
-            {
-              height: {
-                [Op.like]: `%${keyword}%`
-              }
-            },
-            {
-              blockId: {
-                [Op.like]: `%${keyword}%`
-              }
+          [Op.or]: [{
+            height: keyword
+          },
+          {
+            blockId: {
+              [Op.like]: `${keyword}%`
             }
+          }
           ]
         }
       })
