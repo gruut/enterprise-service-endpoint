@@ -137,10 +137,8 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), async (req, res
       (message) => {
         return JSON.parse(message).blockraw
       },
-      async (jsonObj) => {
-        const blockRawJson = jsonObj
-
-        const block = Block.build({
+      async (blockRawJson) => {
+        const block = await Block.create({
           version: blockRawJson.ver,
           blockId: blockRawJson.bID,
           time: new Date(parseInt(`${blockRawJson.time}000`)),
@@ -151,27 +149,21 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), async (req, res
           prevBlockHash: blockRawJson.prevH,
           prevBlockId: blockRawJson.prevbID
         })
-        await block.save()
 
-        let signers = []
-
-        _.each(blockRawJson.SSig, (signer) => {
-          signers.push({
+        await Signer.bulkCreate(_.map(blockRawJson.SSig, (signer) => {
+          return {
             signerId: signer.sID,
             signerSignature: signer.sig,
             blockId: block.id
-          })
-        })
-        await Signer.bulkCreate(signers)
+          }
+        }))
 
-        let transactions = []
-        _.each(blockRawJson.txids, (txId) => {
-          transactions.push({
+        await Transaction.bulkCreate(_.map(blockRawJson.txids, (txId) => {
+          return {
             transactionId: txId,
             blockId: block.id
-          })
-        })
-        await Transaction.bulkCreate(transactions)
+          }
+        }))
 
         return true
       }
