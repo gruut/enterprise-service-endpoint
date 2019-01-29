@@ -137,41 +137,33 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), async (req, res
       (message) => {
         return JSON.parse(message).blockraw
       },
-      async (jsonObj) => {
-        const blockRawJson = jsonObj
-
-        const block = Block.build({
-          version: blockRawJson.ver,
-          blockId: blockRawJson.bID,
-          time: new Date(parseInt(`${blockRawJson.time}000`)),
-          height: blockRawJson.hgt,
-          txRoot: blockRawJson.txrt,
-          mergerId: blockRawJson.mID,
-          chainId: blockRawJson.cID,
-          prevBlockHash: blockRawJson.prevH,
-          prevBlockId: blockRawJson.prevbID
+      async (blockRaw) => {
+        const block = await Block.create({
+          version: blockRaw.ver,
+          blockId: blockRaw.bID,
+          time: new Date(parseInt(`${blockRaw.time}000`)),
+          height: blockRaw.hgt,
+          txRoot: blockRaw.txrt,
+          mergerId: blockRaw.mID,
+          chainId: blockRaw.cID,
+          prevBlockHash: blockRaw.prevH,
+          prevBlockId: blockRaw.prevbID
         })
-        await block.save()
 
-        let signers = []
-
-        _.each(blockRawJson.SSig, (signer) => {
-          signers.push({
+        await Signer.bulkCreate(_.map(blockRaw.SSig, (signer) => {
+          return {
             signerId: signer.sID,
             signerSignature: signer.sig,
             blockId: block.id
-          })
-        })
-        await Signer.bulkCreate(signers)
+          }
+        }))
 
-        let transactions = []
-        _.each(blockRawJson.txids, (txId) => {
-          transactions.push({
+        await Transaction.bulkCreate(_.map(blockRaw.txids, (txId) => {
+          return {
             transactionId: txId,
             blockId: block.id
-          })
-        })
-        await Transaction.bulkCreate(transactions)
+          }
+        }))
 
         return true
       }
