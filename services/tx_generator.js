@@ -10,7 +10,7 @@ const MSG_TX = 0xB1
 const TRANSACTION_ID_SIZE = 32
 const REQUESTER_ID_SIZE = 12
 
-const TX_PROTO_PATH = Path.join(__dirname, '../protos/tx.proto')
+const TX_PROTO_PATH = Path.join(__dirname, '../protos/request_message.proto')
 const LOAD_ARGS = {
   keepCase: true,
   longs: String,
@@ -75,11 +75,11 @@ class TxGenerator {
           return utils.pack(MSG_TX, tx, tx.rID)
         },
         (packedTx) => {
-          return utils.protobuf_msg_serializer(TX_PROTO_PATH, 'grpc_se.GrpcMsgTX', packedTx)
+          return utils.protobuf_msg_serializer(TX_PROTO_PATH, 'grpc_se.Request', packedTx)
         },
         (msg) => {
           _.each(this.clients, (client) => {
-            client.transaction(msg, async function (err, res) {
+            client.seService(msg, function (err, res) {
               if (err) {
                 return false
               }
