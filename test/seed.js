@@ -6,9 +6,10 @@ const {
 
 class Seed {
   static sampleBlock () {
+    const randomBlockId = Buffer.from(Math.random().toString()).toString('base64')
     return Block.create({
       version: 1,
-      blockId: 'xo2a8TIhzOYE1aUZMta7lGJSlCdgHoG9eyrldLbq6Nw=',
+      blockId: randomBlockId,
       prevBlockHash: 'j29G/wJ0tBSfOuLx4DjMtJmPuVeNrgzqa+5ptxisj5Q=',
       prevBlockId: 'xGDovtfI32Xl84eQy529S9LT4odVrgHXnvNfjR7YBgc=',
       chainId: 'R0VOVEVTVDE=',

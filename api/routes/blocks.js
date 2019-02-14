@@ -139,17 +139,21 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), async (req, res
         return JSON.parse(message).blockraw
       },
       async (blockRaw) => {
-        const block = await Block.create({
-          version: blockRaw.ver,
-          blockId: blockRaw.bID,
-          time: new Date(parseInt(`${blockRaw.time}000`)),
-          height: blockRaw.hgt,
-          txRoot: blockRaw.txrt,
-          mergerId: blockRaw.mID,
-          chainId: blockRaw.cID,
-          prevBlockHash: blockRaw.prevH,
-          prevBlockId: blockRaw.prevbID
-        })
+        const [block] = await Block.findOrCreate({
+          where: {blockId: blockRaw.bID},
+          defaults: {
+            version: blockRaw.ver,
+            blockId: blockRaw.bID,
+            time: new Date(parseInt(`${blockRaw.time}000`)),
+            height: blockRaw.hgt,
+            txRoot: blockRaw.txrt,
+            mergerId: blockRaw.mID,
+            chainId: blockRaw.cID,
+            prevBlockHash: blockRaw.prevH,
+            prevBlockId: blockRaw.prevbID
+          }
+        }
+        )
 
         await Signer.bulkCreate(_.map(blockRaw.SSig, (signer) => {
           return {
