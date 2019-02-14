@@ -179,5 +179,58 @@ describe('Block API', () => {
           })
         })
     })
+
+    it('should not create duplicated block', async () => {
+      await sequelize.sync({
+        force: true,
+        match: /_test$/
+      })
+
+      const blockRaw = {
+        ver: '1',
+        bID: 'testID',
+        time: '1545292716',
+        hgt: 1,
+        txrt: 'dCc8MsxGDMpc1QEKmt/7EK8l8IcOe9owKwSwCenFvw4=',
+        mID: 'TUVSR0VSLTE=',
+        cID: 'R0VOVEVTVDE=',
+        prevH: 'j29G/wJ0tBSfOuLx4DjMtJmPuVeNrgzqa+5ptxisj5Q=',
+        prevbID: 'xGDovtfI32Xl84eQy529S9LT4odVrgHXnvNfjR7YBgc='
+      }
+      await Block.create({
+        version: blockRaw.ver,
+        blockId: blockRaw.bID,
+        time: new Date(parseInt(`${blockRaw.time}000`)),
+        height: blockRaw.hgt,
+        txRoot: blockRaw.txrt,
+        mergerId: blockRaw.mID,
+        chainId: blockRaw.cID,
+        prevBlockHash: blockRaw.prevH,
+        prevBlockId: blockRaw.prevbID
+      })
+
+      chai.request(server)
+        .post('/blocks')
+        .set('content-type', 'application/x-www-form-urlencoded')
+        .send({
+          message: JSON.stringify({
+            blockraw: blockRaw
+          })
+        })
+        .end(async (err, res) => {
+          if (err) throw err
+
+          Block.findAll({
+            where: {
+              'height': blockRaw.hgt
+            }
+          }).then((blocks) => {
+            expect(res.status).to.be.equal(200)
+            expect(blocks.length).to.be.equal(1)
+          }).catch(e => {
+            throw e
+          })
+        })
+    })
   })
 })
