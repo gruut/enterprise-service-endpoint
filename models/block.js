@@ -44,7 +44,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     }
   }, {
-    timestamp: true
+    timestamp: true,
+    rowFormat: 'DYNAMIC'
   })
   block.associate = function (models) {
     // associations can be defined here
