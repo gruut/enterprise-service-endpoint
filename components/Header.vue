@@ -79,7 +79,7 @@ export default {
         keyword: query
       })
 
-      return axios.get(`/api/blocks/?${q}`)
+      return axios.get(`/api/blocks/search/?${q}`)
     },
     async queryBlocks (keyword) {
       try {
