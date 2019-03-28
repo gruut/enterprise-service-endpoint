@@ -1,6 +1,7 @@
 const {Router} = require('express')
 const crypto = require('crypto')
 const bodyParser = require('body-parser')
+const Url = require('url')
 const {
   Block,
   RequestData,
@@ -24,20 +25,19 @@ router.get('/transactions', async (req, res) => {
         ]
       })
     } else {
-      const { transactionId } = req.query
-      const transaction = await Transaction.findOne({
+      const escapedTransactionId = Url.parse(req.url, true).query.transactionId
+      const rawTxId = escapedTransactionId.replace(/\s/, '+')
+      transactions = await Transaction.findAll({
         where: {
-          transactionId: {
-            [Op.like]: `${transactionId}%`
-          }
+          transactionId: rawTxId
         }
       })
-
-      if (transaction) {
-        transactions = [transaction]
-      }
     }
 
+    if (_.isEmpty(transactions)) {
+      res.sendStatus(404)
+      return
+    }
     res.json(transactions)
   } catch (e) {
     res.sendStatus(500)

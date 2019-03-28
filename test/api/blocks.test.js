@@ -58,6 +58,19 @@ describe('Block API', () => {
           done()
         })
     })
+
+    it('should return a specific block', (done) => {
+      Block.findAll().then((blocks) => {
+        chai.request(server)
+          .get(`/blocks?blockId=${blocks[0].blockId}`)
+          .end((err, res) => {
+            if (err) throw err
+
+            expect(res.status).to.be.equal(200)
+            done()
+          })
+      })
+    })
   })
 
   describe('GET :id', () => {

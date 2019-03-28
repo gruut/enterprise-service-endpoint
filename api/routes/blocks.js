@@ -9,6 +9,7 @@ const {
   }
 } = require('../../models')
 const bodyParser = require('body-parser')
+const Url = require('url')
 const router = Router()
 const _ = require('../../plugins/partial')
 
@@ -48,15 +49,20 @@ router.get('/blocks', async (req, res) => {
       })
       blocks = await addTxCountProperty(blocks)
     } else if (req.query.blockId) {
-      const block = await Block.find({
+      const escapedBlockId = Url.parse(req.url, true).query.blockId
+      const rawBlockId = escapedBlockId.replace(/\s/, '+')
+      blocks = await Block.findAll({
         where: {
-          'blockId': req.query.blockId
+          blockId: rawBlockId
         }
       })
-
-      blocks = [block]
     } else {
       blocks = await Block.findAll()
+    }
+
+    if (_.isEmpty(blocks)) {
+      res.sendStatus(404)
+      return
     }
 
     res.json({
@@ -159,7 +165,7 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), async (req, res
         return JSON.parse(message).blockraw
       },
       async (blockRaw) => {
-        const [block, blockCreated] = await Block.findOrCreate({
+        const [block] = await Block.findOrCreate({
           where: {blockId: blockRaw.bID},
           defaults: {
             version: blockRaw.ver,
@@ -175,22 +181,20 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), async (req, res
         }
         )
 
-        if (blockCreated) {
-          await Signer.bulkCreate(_.map(blockRaw.SSig, (signer) => {
-            return {
-              signerId: signer.sID,
-              signerSignature: signer.sig,
-              blockId: block.id
-            }
-          }))
+        await Signer.bulkCreate(_.map(blockRaw.SSig, (signer) => {
+          return {
+            signerId: signer.sID,
+            signerSignature: signer.sig,
+            blockId: block.id
+          }
+        }))
 
-          await Transaction.bulkCreate(_.map(blockRaw.txids, (txId) => {
-            return {
-              transactionId: txId,
-              blockId: block.id
-            }
-          }))
-        }
+        await Transaction.bulkCreate(_.map(blockRaw.txids, (txId) => {
+          return {
+            transactionId: txId,
+            blockId: block.id
+          }
+        }))
 
         return true
       }

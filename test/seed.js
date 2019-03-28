@@ -31,9 +31,11 @@ class Seed {
   }
 
   static async sampleTransaction () {
+    const randomTxId = Buffer.from(Math.random().toString()).toString('base64')
+
     const block = await this.sampleBlock()
     return Transaction.create({
-      transactionId: 'dSupNe0rqGpXKdvnQFB3pvtAHxvj3pUsJSGN3UbDWWc=',
+      transactionId: randomTxId,
       blockId: block.id
     })
       .catch(e => console.log(e))

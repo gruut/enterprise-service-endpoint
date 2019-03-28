@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     blockId: {
       allowNull: false,
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      unique: 'unique_constraint_block_id'
     },
     time: {
       allowNull: false,
@@ -43,7 +44,8 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     }
   }, {
-    timestamp: true
+    timestamp: true,
+    rowFormat: 'DYNAMIC'
   })
   block.associate = function (models) {
     // associations can be defined here
