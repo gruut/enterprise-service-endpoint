@@ -47,27 +47,14 @@ router.get('/blocks', async (req, res) => {
         offset
       })
       blocks = await addTxCountProperty(blocks)
-    } else {
-      const { keyword } = req.query
-      const searchedBlocks = await Block.findAll({
+    } else if (req.query.blockId) {
+      blocks = [await Block.find({
         where: {
-          [Op.or]: [{
-            height: keyword
-          },
-          {
-            blockId: {
-              [Op.like]: `${keyword}%`
-            }
-          }
-          ]
+          'blockId': req.query.blockId
         }
-      })
-
-      if (searchedBlocks.length > 0) {
-        blocks = searchedBlocks
-      } else {
-        blocks = await Block.findAll()
-      }
+      })]
+    } else {
+      blocks = await Block.findAll()
     }
     res.json({
       blocks,
@@ -79,7 +66,37 @@ router.get('/blocks', async (req, res) => {
   }
 })
 
-/* GET Block by ID(Height). */
+router.get('/blocks/search', async (req, res) => {
+  try {
+    const { keyword } = req.query
+    const searchedBlocks = await Block.findAll({
+      where: {
+        [Op.or]: [{
+          height: keyword
+        },
+        {
+          blockId: {
+            [Op.like]: `${keyword}%`
+          }
+        }
+        ]
+      }
+    })
+
+    if (searchedBlocks.length > 0) {
+      res.json({
+        searchedBlocks
+      })
+    } else {
+      res.sendStatus(404)
+    }
+  } catch (error) {
+    res.sendStatus(500)
+    throw error
+  }
+})
+
+/* GET Block by ID (Height). */
 const DEFAULT_TRANSACTION_PAGE = 1
 const DEFAULT_TRANSACTION_ROWS = 5
 router.get('/blocks/:id', async (req, res) => {

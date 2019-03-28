@@ -86,7 +86,7 @@ export default {
       })
       .catch(e => {
         console.log(e)
-        error({ statusCode: 404, message: 'Transaction not found' })
+        error({ statusCode: 404, message: 'Block not found' })
       })
   },
   watch: {
