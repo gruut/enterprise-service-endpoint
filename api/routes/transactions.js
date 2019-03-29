@@ -29,7 +29,9 @@ router.get('/transactions', async (req, res) => {
       const rawTxId = escapedTransactionId.replace(/\s/, '+')
       transactions = await Transaction.findAll({
         where: {
-          transactionId: rawTxId
+          transactionId: {
+            [Op.like]: `${rawTxId}%`
+          }
         }
       })
     }

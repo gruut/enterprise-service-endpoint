@@ -86,6 +86,7 @@ export default {
         const res = await this.findBlock(keyword)
         if (res.status === 200) {
           this.blocks = res.data.blocks
+
           _.each(this.blocks, block => {
             block.link = `blocks/${block.height}`
             block.idAndHeight = `ID: ${block.blockId} - Height: ${block.height}`

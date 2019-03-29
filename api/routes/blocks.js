@@ -94,7 +94,7 @@ router.get('/blocks/search', async (req, res) => {
 
     if (searchedBlocks.length > 0) {
       res.json({
-        searchedBlocks
+        blocks: searchedBlocks
       })
     } else {
       res.sendStatus(404)
