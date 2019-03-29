@@ -165,7 +165,7 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), async (req, res
         return JSON.parse(message).blockraw
       },
       async (blockRaw) => {
-        const [block] = await Block.findOrCreate({
+        const [block, blockCreated] = await Block.findOrCreate({
           where: {blockId: blockRaw.bID},
           defaults: {
             version: blockRaw.ver,
@@ -180,21 +180,22 @@ router.post('/blocks', bodyParser.urlencoded({extended: false}), async (req, res
           }
         }
         )
+        if (blockCreated) {
+          await Signer.bulkCreate(_.map(blockRaw.SSig, (signer) => {
+            return {
+              signerId: signer.sID,
+              signerSignature: signer.sig,
+              blockId: block.id
+            }
+          }))
 
-        await Signer.bulkCreate(_.map(blockRaw.SSig, (signer) => {
-          return {
-            signerId: signer.sID,
-            signerSignature: signer.sig,
-            blockId: block.id
-          }
-        }))
-
-        await Transaction.bulkCreate(_.map(blockRaw.txids, (txId) => {
-          return {
-            transactionId: txId,
-            blockId: block.id
-          }
-        }))
+          await Transaction.bulkCreate(_.map(blockRaw.txids, (txId) => {
+            return {
+              transactionId: txId,
+              blockId: block.id
+            }
+          }))
+        }
 
         return true
       }
