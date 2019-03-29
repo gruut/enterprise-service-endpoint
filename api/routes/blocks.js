@@ -48,14 +48,17 @@ router.get('/blocks', async (req, res) => {
       })
       blocks = await addTxCountProperty(blocks)
     } else if (req.query.blockId) {
-      blocks = [await Block.find({
+      const block = await Block.find({
         where: {
           'blockId': req.query.blockId
         }
-      })]
+      })
+
+      blocks = [block]
     } else {
       blocks = await Block.findAll()
     }
+
     res.json({
       blocks,
       totalBlocksCount
