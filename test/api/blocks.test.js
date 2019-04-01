@@ -71,6 +71,17 @@ describe('Block API', () => {
           })
       })
     })
+
+    it('should return 404 status', (done) => {
+      chai.request(server)
+        .get('/blocks?wrong_query=1')
+        .end((err, res) => {
+          if (err) throw err
+
+          expect(res.status).to.be.equal(404)
+          done()
+        })
+    })
   })
 
   describe('GET :id', () => {

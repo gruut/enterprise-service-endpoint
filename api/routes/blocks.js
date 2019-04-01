@@ -35,34 +35,36 @@ router.get('/blocks', async (req, res) => {
     let blocks = null
     const totalBlocksCount = await Block.count()
 
-    if (req.query.page && req.query.rows) {
-      const page = parseInt(req.query.page)
-      const rows = parseInt(req.query.rows)
-      const offset = (page - 1) * rows
+    if (!_.isEmpty(req.query)) {
+      if (req.query.page && req.query.rows) {
+        const page = parseInt(req.query.page)
+        const rows = parseInt(req.query.rows)
+        const offset = (page - 1) * rows
 
-      blocks = await Block.findAll({
-        order: [
-          ['time', 'DESC']
-        ],
-        limit: rows,
-        offset
-      })
-      blocks = await addTxCountProperty(blocks)
-    } else if (req.query.blockId) {
-      const escapedBlockId = Url.parse(req.url, true).query.blockId
-      const rawBlockId = escapedBlockId.replace(/\s/, '+')
-      blocks = await Block.findAll({
-        where: {
-          blockId: rawBlockId
-        }
-      })
+        blocks = await Block.findAll({
+          order: [
+            ['time', 'DESC']
+          ],
+          limit: rows,
+          offset
+        })
+        blocks = await addTxCountProperty(blocks)
+      } else if (req.query.blockId) {
+        const escapedBlockId = Url.parse(req.url, true).query.blockId
+        const rawBlockId = escapedBlockId.replace(/\s/, '+')
+        blocks = await Block.findAll({
+          where: {
+            blockId: rawBlockId
+          }
+        })
+      }
+
+      if (_.isEmpty(blocks)) {
+        res.sendStatus(404)
+        return
+      }
     } else {
       blocks = await Block.findAll()
-    }
-
-    if (_.isEmpty(blocks)) {
-      res.sendStatus(404)
-      return
     }
 
     res.json({
