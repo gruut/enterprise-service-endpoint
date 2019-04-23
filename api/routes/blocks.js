@@ -4,7 +4,7 @@ const {
   Signer,
   Transaction,
   RequestData,
-  sequelize: {
+  Sequelize: {
     Op
   }
 } = require('../../models')

@@ -2,7 +2,7 @@ const _ = require('../plugins/partial')
 const {
   Block,
   Transaction
-} = require('../../models')
+} = require('../models')
 
 const getCondition = async (query) => {
   const condition = {}
@@ -28,7 +28,7 @@ const getCondition = async (query) => {
     Object.assign(condition, {blockId: rawBlockId})
   }
 
-  return query
+  return condition
 }
 
 class BlockFetcher {
@@ -38,7 +38,12 @@ class BlockFetcher {
     if (_.isEmpty(query)) {
       blocks = await Block.findAll()
     } else {
-      blocks = await Block.findAll(getCondition(query))
+      const condition = await getCondition(query)
+      if (_.isEmpty(condition)) {
+        return []
+      }
+
+      blocks = await Block.findAll(condition)
     }
 
     return blocks
