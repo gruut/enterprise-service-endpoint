@@ -12,59 +12,24 @@ const bodyParser = require('body-parser')
 const Url = require('url')
 const router = Router()
 const _ = require('../../plugins/partial')
+const BlockFetcher = require('../../services/block_fetcher')
 
-function addTxCountProperty (blocks) {
-  return new Promise((resolve, reject) => {
-    const blocksArr = _.map(blocks, async (block) => {
-      const count = await Transaction.count({
-        where: {
-          'blockId': block.id
-        }
-      })
-
-      return Object.assign({}, block.dataValues, { transactionCount: count })
-    })
-
-    resolve(blocksArr)
-  })
+const parseUrl = (req, res, next) => {
+  req.url = Url.parse(req.url, true)
+  next()
 }
 
 /* GET Blocks listing. */
-router.get('/blocks', async (req, res) => {
+router.get('/blocks', parseUrl, async (req, res) => {
   try {
-    let blocks = null
     const totalBlocksCount = await Block.count()
 
-    if (!_.isEmpty(req.query)) {
-      if (req.query.page && req.query.rows) {
-        const page = parseInt(req.query.page)
-        const rows = parseInt(req.query.rows)
-        const offset = (page - 1) * rows
+    let blocks = await BlockFetcher.fetch(req.query)
+    blocks = await BlockFetcher.addTxCountProperty(blocks)
 
-        blocks = await Block.findAll({
-          order: [
-            ['time', 'DESC']
-          ],
-          limit: rows,
-          offset
-        })
-        blocks = await addTxCountProperty(blocks)
-      } else if (req.query.blockId) {
-        const escapedBlockId = Url.parse(req.url, true).query.blockId
-        const rawBlockId = escapedBlockId.replace(/\s/, '+')
-        blocks = await Block.findAll({
-          where: {
-            blockId: rawBlockId
-          }
-        })
-      }
-
-      if (_.isEmpty(blocks)) {
-        res.sendStatus(404)
-        return
-      }
-    } else {
-      blocks = await Block.findAll()
+    if (_.isEmpty(blocks)) {
+      res.sendStatus(404)
+      return
     }
 
     res.json({
