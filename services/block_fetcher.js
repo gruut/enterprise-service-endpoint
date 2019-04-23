@@ -1,31 +1,51 @@
 const _ = require('../plugins/partial')
 const {
   Block,
-  Transaction
+  Transaction,
+  Sequelize: {
+    Op
+  }
 } = require('../models')
 
-const getCondition = async (query) => {
-  const condition = {}
+const queryLimit = (query) => {
+  const qLimit = {}
 
   if (query.page && query.rows) {
     const page = parseInt(query.page)
     const rows = parseInt(query.rows)
     const offset = (page - 1) * rows
 
-    Object.assign(condition, {
-      order: [
-        ['time', 'DESC']
-      ],
+    Object.assign(qLimit, {
       limit: rows,
       offset
     })
   }
 
+  return qLimit
+}
+
+const getCondition = async (query) => {
+  const condition = {}
+
   if (query.blockId) {
     const escapedBlockId = query.blockId
-    const rawBlockId = escapedBlockId.replace(/\s/, '+')
+    const rawBlockId = escapedBlockId.replace(/\s/gi, '+')
 
     Object.assign(condition, {blockId: rawBlockId})
+  }
+
+  if (query.keyword) {
+    Object.assign(condition, {
+      [Op.or]: [{
+        height: query.keyword
+      },
+      {
+        blockId: {
+          [Op.like]: `${query.keyword}%`
+        }
+      }
+      ]
+    })
   }
 
   return condition
@@ -38,12 +58,16 @@ class BlockFetcher {
     if (_.isEmpty(query)) {
       blocks = await Block.findAll()
     } else {
+      const qLimit = queryLimit(query)
       const condition = await getCondition(query)
-      if (_.isEmpty(condition)) {
-        return []
-      }
 
-      blocks = await Block.findAll(condition)
+      blocks = await Block.findAll({
+        order: [
+          ['time', 'DESC']
+        ],
+        ...qLimit,
+        where: condition
+      })
     }
 
     return blocks

@@ -3,10 +3,7 @@ const {
   Block,
   Signer,
   Transaction,
-  RequestData,
-  Sequelize: {
-    Op
-  }
+  RequestData
 } = require('../../models')
 const bodyParser = require('body-parser')
 const Url = require('url')
@@ -44,20 +41,7 @@ router.get('/blocks', parseUrl, async (req, res) => {
 
 router.get('/blocks/search', async (req, res) => {
   try {
-    const { keyword } = req.query
-    const searchedBlocks = await Block.findAll({
-      where: {
-        [Op.or]: [{
-          height: keyword
-        },
-        {
-          blockId: {
-            [Op.like]: `${keyword}%`
-          }
-        }
-        ]
-      }
-    })
+    const searchedBlocks = await BlockFetcher.fetch(req.query)
 
     if (searchedBlocks.length > 0) {
       res.json({
