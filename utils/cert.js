@@ -1,4 +1,4 @@
-const { Key, sequelize: { Op } } = require('../models')
+const { Key, Sequelize: { Op } } = require('../models')
 const KeyUtils = require('jsrsasign')
 const axios = require('axios')
 
