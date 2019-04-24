@@ -24,7 +24,7 @@ const queryLimit = (query) => {
   return qLimit
 }
 
-const getCondition = async (query) => {
+const getCondition = (query) => {
   const condition = {}
 
   if (query.blockId) {
@@ -59,7 +59,8 @@ class BlockFetcher {
       blocks = await Block.findAll()
     } else {
       const qLimit = queryLimit(query)
-      const condition = await getCondition(query)
+
+      const condition = getCondition(query)
 
       blocks = await Block.findAll({
         order: [
@@ -71,6 +72,16 @@ class BlockFetcher {
     }
 
     return blocks
+  }
+
+  static async fetchById (height) {
+    const block = await Block.findOne(
+      {
+        where: {height},
+        attributes: {exclude: ['createdAt', 'updatedAt']}
+      })
+
+    return block
   }
 
   static async addTxCountProperty (blocks) {

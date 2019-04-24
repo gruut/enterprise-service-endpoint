@@ -2,22 +2,34 @@ const {Router} = require('express')
 const {
   Block,
   Signer,
-  Transaction,
-  RequestData
+  Transaction
 } = require('../../models')
 const bodyParser = require('body-parser')
 const Url = require('url')
 const router = Router()
 const _ = require('../../plugins/partial')
 const BlockFetcher = require('../../services/block_fetcher')
+const TransactionFetcher = require('../../services/transaction_fetcher')
+const RequestDataFetcher = require('../../services/request_data')
+const SignerFetcher = require('../../services/signer_fetcher')
 
 const parseUrl = (req, res, next) => {
   req.url = Url.parse(req.url, true)
   next()
 }
 
+const permittedQueries = ['blockId', 'keyword', 'page', 'rows']
+const validateWrongQuery = (req, res, next) => {
+  const filteredQuery = _.omit(req.query, permittedQueries)
+  if (!_.isEmpty(filteredQuery)) {
+    res.sendStatus(404)
+  } else {
+    next()
+  }
+}
+
 /* GET Blocks listing. */
-router.get('/blocks', parseUrl, async (req, res) => {
+router.get('/blocks', validateWrongQuery, parseUrl, async (req, res) => {
   try {
     const totalBlocksCount = await Block.count()
 
@@ -62,34 +74,19 @@ const DEFAULT_TRANSACTION_ROWS = 5
 router.get('/blocks/:id', async (req, res) => {
   try {
     const height = parseInt(req.params.id)
-    const block = await Block.findOne(
-      {
-        where: {height},
-        attributes: {exclude: ['createdAt', 'updatedAt']}
-      })
+    const block = await BlockFetcher.fetchById(height)
 
     if (block) {
       const page = parseInt(req.query.tx_page) || DEFAULT_TRANSACTION_PAGE
       const rows = parseInt(req.query.tx_rows) || DEFAULT_TRANSACTION_ROWS
       const offset = (page - 1) * rows
 
-      const transactions = await Transaction.findAll({
-        where: { blockId: block.id },
-        limit: rows,
-        offset
-      }
-      )
-      const transactionsCount = await Transaction.count({
-        where: {blockId: block.id}
-      })
+      const transactions = await TransactionFetcher.fetch({block_id: block.id, limit: rows, offset})
+      const transactionsCount = await TransactionFetcher.count({blockId: block.id})
 
-      const requestData = await RequestData.findAll({
-        where: {
-          transactionId: _.pluck(transactions, 'transactionId')
-        }
-      })
+      const requestData = await RequestDataFetcher.fetch({transactions})
 
-      const signers = await Signer.findAll({where: {blockId: block.id}})
+      const signers = await SignerFetcher.fetch({blockId: block.id})
 
       res.json({
         block,
@@ -107,6 +104,7 @@ router.get('/blocks/:id', async (req, res) => {
   }
 })
 
+// TODO: API Server
 /* POST handle MSG_HEADER */
 router.post('/blocks', bodyParser.urlencoded({extended: false}), async (req, res) => {
   try {
