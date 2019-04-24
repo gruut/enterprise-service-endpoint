@@ -6,7 +6,7 @@ const {
 class TransactionFetcher {
   static async fetch (query) {
     const transactions = await Transaction.findAll({
-      where: { blockId: query.block_id },
+      where: { blockId: query.blockId },
       limit: query.limit,
       offset: query.offset
     })
@@ -17,7 +17,7 @@ class TransactionFetcher {
   static async count (query) {
     let txCount = null
 
-    if (!_.isEmpty(query.blockId)) {
+    if (query.blockId) {
       txCount = await Transaction.count({
         where: {blockId: query.blockId}
       })

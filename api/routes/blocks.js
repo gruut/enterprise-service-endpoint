@@ -1,8 +1,6 @@
 const {Router} = require('express')
 const {
-  Block,
-  Signer,
-  Transaction
+  Block
 } = require('../../models')
 const bodyParser = require('body-parser')
 const Url = require('url')
@@ -12,9 +10,15 @@ const BlockFetcher = require('../../services/block_fetcher')
 const TransactionFetcher = require('../../services/transaction_fetcher')
 const RequestDataFetcher = require('../../services/request_data')
 const SignerFetcher = require('../../services/signer_fetcher')
+const BlockMsgHandler = require('../../services/block_msg_handler')
 
 const parseUrl = (req, res, next) => {
   req.url = Url.parse(req.url, true)
+  next()
+}
+
+const parseBlockMsg = (req, res, next) => {
+  req.blockMsg = JSON.parse(req.body['message']).blockraw
   next()
 }
 
@@ -81,8 +85,10 @@ router.get('/blocks/:id', async (req, res) => {
       const rows = parseInt(req.query.tx_rows) || DEFAULT_TRANSACTION_ROWS
       const offset = (page - 1) * rows
 
-      const transactions = await TransactionFetcher.fetch({block_id: block.id, limit: rows, offset})
-      const transactionsCount = await TransactionFetcher.count({blockId: block.id})
+      const transactions = await TransactionFetcher.fetch({blockId: block.id, limit: rows, offset})
+
+      const allTransactions = await TransactionFetcher.fetch({blockId: block.id})
+      const transactionsCount = allTransactions.length
 
       const requestData = await RequestDataFetcher.fetch({transactions})
 
@@ -106,49 +112,9 @@ router.get('/blocks/:id', async (req, res) => {
 
 // TODO: API Server
 /* POST handle MSG_HEADER */
-router.post('/blocks', bodyParser.urlencoded({extended: false}), async (req, res) => {
+router.post('/blocks', bodyParser.urlencoded({extended: false}), parseBlockMsg, async (req, res) => {
   try {
-    let result = false
-    result = await _.go(req.body['message'],
-      (message) => {
-        return JSON.parse(message).blockraw
-      },
-      async (blockRaw) => {
-        const [block, blockCreated] = await Block.findOrCreate({
-          where: {blockId: blockRaw.bID},
-          defaults: {
-            version: blockRaw.ver,
-            blockId: blockRaw.bID,
-            time: new Date(parseInt(`${blockRaw.time}000`)),
-            height: blockRaw.hgt,
-            txRoot: blockRaw.txrt,
-            mergerId: blockRaw.mID,
-            chainId: blockRaw.cID,
-            prevBlockHash: blockRaw.prevH,
-            prevBlockId: blockRaw.prevbID
-          }
-        }
-        )
-        if (blockCreated) {
-          await Signer.bulkCreate(_.map(blockRaw.SSig, (signer) => {
-            return {
-              signerId: signer.sID,
-              signerSignature: signer.sig,
-              blockId: block.id
-            }
-          }))
-
-          await Transaction.bulkCreate(_.map(blockRaw.txids, (txId) => {
-            return {
-              transactionId: txId,
-              blockId: block.id
-            }
-          }))
-        }
-
-        return true
-      }
-    )
+    const result = await BlockMsgHandler.handleMessage(req.blockMsg)
 
     if (result === true) { res.sendStatus(200) } else {
       res.sendStatus(400)
