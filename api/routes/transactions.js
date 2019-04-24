@@ -5,41 +5,33 @@ const Url = require('url')
 const {
   Block,
   RequestData,
-  Transaction,
-  Signer,
-  Sequelize: {
-    Op
-  }
+  Signer
 } = require('../../models')
 const TxGenerator = require('../../services/tx_generator')
 const router = Router()
 const _ = require('partial-js')
+const TransactionFetcher = require('../../services/transaction_fetcher')
 
-router.get('/transactions', async (req, res) => {
+const parseUrl = (req, res, next) => {
+  req.url = Url.parse(req.url, true)
+  next()
+}
+
+router.get('/transactions', parseUrl, async (req, res) => {
   try {
     let transactions = null
+
     if (_.isEmpty(req.query)) {
-      transactions = await Transaction.findAll({
-        order: [
-          ['createdAt', 'DESC']
-        ]
-      })
+      transactions = await TransactionFetcher.fetch()
     } else {
-      const escapedTransactionId = Url.parse(req.url, true).query.transactionId
-      const rawTxId = escapedTransactionId.replace(/\s/, '+')
-      transactions = await Transaction.findAll({
-        where: {
-          transactionId: {
-            [Op.like]: `${rawTxId}%`
-          }
-        }
-      })
+      transactions = await TransactionFetcher.fetch(req.query)
     }
 
     if (_.isEmpty(transactions)) {
       res.sendStatus(404)
       return
     }
+
     res.json(transactions)
   } catch (e) {
     res.sendStatus(500)
@@ -50,8 +42,8 @@ router.get('/transactions', async (req, res) => {
 /* GET Transaction by ID. */
 router.get('/transactions/:id', async (req, res) => {
   try {
-    const id = parseInt(req.params.id)
-    const transaction = await Transaction.findByPk(id)
+    const transaction = await TransactionFetcher.fetchById(req.params.id)
+
     const requestData = await RequestData.findOne({where: {
       transactionId: transaction.transactionId
     }})
@@ -74,6 +66,7 @@ router.get('/transactions/:id', async (req, res) => {
   }
 })
 
+// TODO: API
 /* POST create a transaction */
 router.post('/transactions', bodyParser.urlencoded({extended: false}), async (req, res) => {
   try {

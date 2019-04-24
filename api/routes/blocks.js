@@ -73,19 +73,13 @@ router.get('/blocks/search', async (req, res) => {
 })
 
 /* GET Block by ID (Height). */
-const DEFAULT_TRANSACTION_PAGE = 1
-const DEFAULT_TRANSACTION_ROWS = 5
 router.get('/blocks/:id', async (req, res) => {
   try {
     const height = parseInt(req.params.id)
     const block = await BlockFetcher.fetchById(height)
 
     if (block) {
-      const page = parseInt(req.query.tx_page) || DEFAULT_TRANSACTION_PAGE
-      const rows = parseInt(req.query.tx_rows) || DEFAULT_TRANSACTION_ROWS
-      const offset = (page - 1) * rows
-
-      const transactions = await TransactionFetcher.fetch({blockId: block.id, limit: rows, offset})
+      const transactions = await TransactionFetcher.fetch({blockId: block.id, page: req.query.tx_page, rows: req.query.tx_rows})
 
       const allTransactions = await TransactionFetcher.fetch({blockId: block.id})
       const transactionsCount = allTransactions.length
