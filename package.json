@@ -42,7 +42,7 @@
     "moment-timezone": "^0.5.23",
     "multer": "^1.4.1",
     "mysql2": "^1.6.3",
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "nodemon": "^1.18.9",
     "nuxt": "^2.6.2",
     "partial-js": "^1.1.6",
