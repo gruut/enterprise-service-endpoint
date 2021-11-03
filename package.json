@@ -52,7 +52,7 @@
     "sequelize": "^5.15.1",
     "source-map-support": "^0.4.15",
     "uuid": "^3.3.2",
-    "validator": "^10.9.0",
+    "validator": "^13.7.0",
     "vue": "^2.6.10",
     "vue2-autocomplete-js": "^0.2.2",
     "vuelidate": "^0.7.4",
